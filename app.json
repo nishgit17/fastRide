@@ -10,7 +10,7 @@
     "newArchEnabled": true,
     "ios": {
       "supportsTablet": true,
-      "googleServicesFile": "/home/nishant-pandey/fastRide/ios/fastRide/Info.plist",
+      "googleServicesFile": "./ios/fastRide/GoogleService-Info.plist",
       "bundleIdentifier": "com.nishantapp.fastRide"
     },
     "android": {
@@ -20,7 +20,7 @@
       },
       "edgeToEdgeEnabled": true,
       "package": "com.nishantapp.fastRide",
-      "googleServicesFile": "/home/nishant-pandey/fastRide/android/app/google-services(1).json"
+      "googleServicesFile": "/home/nishant-pandey/fastRide/android/app/google-services.json"
     },
     "web": {
       "bundler": "metro",
