@@ -9,14 +9,18 @@
     "userInterfaceStyle": "automatic",
     "newArchEnabled": true,
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "googleServicesFile": "/home/nishant-pandey/fastRide/ios/fastRide/Info.plist",
+      "bundleIdentifier": "com.nishantapp.fastRide"
     },
     "android": {
       "adaptiveIcon": {
         "foregroundImage": "./assets/images/adaptive-icon.png",
         "backgroundColor": "#ffffff"
       },
-      "edgeToEdgeEnabled": true
+      "edgeToEdgeEnabled": true,
+      "package": "com.nishantapp.fastRide",
+      "googleServicesFile": "/home/nishant-pandey/fastRide/android/app/google-services(1).json"
     },
     "web": {
       "bundler": "metro",
@@ -25,6 +29,8 @@
     },
     "plugins": [
       "expo-router",
+      "@react-native-firebase/auth",
+      "@react-native-firebase/crashlytics",
       [
         "expo-splash-screen",
         {
@@ -37,6 +43,13 @@
     ],
     "experiments": {
       "typedRoutes": true
-    }
+    },
+    "extra": {
+      "router": {},
+      "eas": {
+        "projectId": "174d3efe-9ff8-49c4-91ff-e1ded41a1d1e"
+      }
+    },
+    "owner": "nishantapp"
   }
 }
