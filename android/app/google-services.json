@@ -1,0 +1,54 @@
+{
+  "project_info": {
+    "project_number": "1007936869171",
+    "project_id": "fastride-d8206",
+    "storage_bucket": "fastride-d8206.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1007936869171:android:b4bc89a5f5d728d467a446",
+        "android_client_info": {
+          "package_name": "com.nishantapp.fastRide"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1007936869171-0oe6ilno8551ap5eoblgk72as8rlvq6o.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.nishantapp.fastRide",
+            "certificate_hash": "d10d7155aac6330ee3608fe25de53b6faf28e646"
+          }
+        },
+        {
+          "client_id": "1007936869171-9ap420209rcb8nhiclm0ifkvsih0abqe.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAlEohe5b_LdL2dV8ubop-2rH8o7ZLx_ug"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1007936869171-9ap420209rcb8nhiclm0ifkvsih0abqe.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "1007936869171-sn3qdj96f49b5jvrl379scqf077jm82g.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.nishantapp.fastRide"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
