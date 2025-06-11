@@ -1,36 +1,18 @@
 {
   "cli": {
-    "version": ">= 16.8.0",
+    "version": ">= 16.9.0",
     "appVersionSource": "remote"
   },
   "build": {
     "development": {
       "developmentClient": true,
-      "distribution": "internal",
-      "android": {
-        "gradleCommand": ":app:assembleDebug",
-        "image": "ubuntu-22.04-jdk-17-ndk-r25b"
-      },
-      "env": {
-        "EXPO_NO_PREBUILD": "1"
-      },
-      "cache": {
-        "disabled": true
-      }
+      "distribution": "internal"
     },
     "preview": {
-      "distribution": "internal",
-      "android": {
-        "gradleCommand": ":app:assembleRelease",
-        "image": "ubuntu-22.04-jdk-17-ndk-r25b"
-      }
+      "distribution": "internal"
     },
     "production": {
-      "autoIncrement": true,
-      "android": {
-        "gradleCommand": ":app:assembleRelease",
-        "image": "ubuntu-22.04-jdk-17-ndk-r25b"
-      }
+      "autoIncrement": true
     }
   },
   "submit": {

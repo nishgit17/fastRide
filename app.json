@@ -1,7 +1,7 @@
 {
   "expo": {
     "name": "fastRide",
-    "slug": "fastRide",
+    "slug": "fastride",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",
@@ -20,7 +20,12 @@
       },
       "edgeToEdgeEnabled": true,
       "package": "com.nishantapp.fastRide",
-      "googleServicesFile": "/home/nishant-pandey/fastRide/android/app/google-services.json"
+      "googleServicesFile": "android/app/google-services.json",
+      "config": {
+        "googleMaps": {
+          "apiKey": "AIzaSyCLVlmceJF7PXpWwsmc9OUKDLTNlAGVXms"
+        }
+      }
     },
     "web": {
       "bundler": "metro",
@@ -30,6 +35,8 @@
     "plugins": [
       "expo-router",
       "@react-native-firebase/auth",
+      "@react-native-firebase/app",
+      "@react-native-google-signin/google-signin",
       "@react-native-firebase/crashlytics",
       [
         "expo-splash-screen",
@@ -39,6 +46,13 @@
           "resizeMode": "contain",
           "backgroundColor": "#ffffff"
         }
+      ],
+      [
+      "expo-maps",
+        {
+          "requestLocationPermission": true,
+          "locationPermission": "Allow $(PRODUCT_NAME) to use your location"
+        }
       ]
     ],
     "experiments": {
@@ -47,9 +61,9 @@
     "extra": {
       "router": {},
       "eas": {
-        "projectId": "174d3efe-9ff8-49c4-91ff-e1ded41a1d1e"
+        "projectId": "7b142d98-4171-4a61-ad6a-f927ba19b956"
       }
     },
-    "owner": "nishantapp"
+    "owner": "nishexpo"
   }
 }
