@@ -14,7 +14,7 @@ import {
   View,
 } from 'react-native';
 
-import Image2 from '../assets/images/#goRapido.png';
+import Image2 from '../assets/images/goRapido.png';
 import Image3 from '../assets/images/rapidooffer.png';
 
 const Home = () => {
@@ -35,7 +35,9 @@ const Home = () => {
 
 
   return (
-    <ScrollView contentContainerStyle={styles.container}>
+    <View style={{ backgroundColor: '#fff' }}>
+      <ScrollView contentContainerStyle={styles.container}>
+
       {/* Search bar */}
       <View style={styles.searchContainer}>
       <Link href = "/homemenu" asChild>
@@ -59,20 +61,28 @@ const Home = () => {
 
       {/* Services */}
       <View style={styles.servicesRow}>
-        <TouchableOpacity style={styles.serviceButton}>
-          <MaterialCommunityIcons name="package-variant-closed" size={28} color="brown" />
-          <Text style={styles.serviceText}>Parcel</Text>
-        </TouchableOpacity>
 
-        <TouchableOpacity style={styles.serviceButton}>
-          <Ionicons name="car" size={28} color="black" />
-          <Text style={styles.serviceText}>Cab</Text>
-        </TouchableOpacity>
+        <Link href = "/parcel" asChild>
+          <TouchableOpacity style={styles.serviceButton}>
+            <MaterialCommunityIcons name="package-variant-closed" size={28} color="brown" />
+            <Text style={styles.serviceText}>Parcel</Text>
+          </TouchableOpacity>
+        </Link>
+        
+        <Link href = "/selectlocation" asChild>
+          <TouchableOpacity style={styles.serviceButton}>
+            <Ionicons name="car" size={28} color="black" />
+            <Text style={styles.serviceText}>Cab</Text>
+          </TouchableOpacity>
+        </Link>
 
-        <TouchableOpacity style={styles.serviceButton}>
-          <Ionicons name="bicycle" size={28} color="red" />
-          <Text style={styles.serviceText}>Bike</Text>
-        </TouchableOpacity>
+        <Link href = "/selectlocation" asChild>
+          <TouchableOpacity style={styles.serviceButton}>
+            <Ionicons name="bicycle" size={28} color="red" />
+            <Text style={styles.serviceText}>Bike</Text>
+          </TouchableOpacity>
+        </Link>
+
       </View>
 
       {/* Promo Image */}
@@ -80,7 +90,8 @@ const Home = () => {
 
       {/* Bottom image */}
       <Image source={Image2} style={styles.bottomImage} resizeMode="cover" />
-    </ScrollView>
+      </ScrollView>
+    </View>
   );
 };
 

@@ -60,6 +60,28 @@ export default function RootLayout() {
       <Stack.Screen name="verify" options={{ headerShown: false }} />
       <Stack.Screen name="home" options={{ headerShown: false }} />
       <Stack.Screen name="homemenu" options={{ headerShown: false }} />
+      <Stack.Screen
+        name="selectlocation"
+        options={{
+          headerTitle: 'Home',
+          headerTitleAlign: 'left',
+          headerTintColor: 'blue' ,
+          headerTitleStyle: {
+          fontSize: 20,
+          },
+        }}
+      />
+      <Stack.Screen
+        name="parcel"
+        options={{
+          headerTitle: 'Parcel',
+          headerTitleAlign: 'center',
+          headerTintColor: 'black' ,
+          headerTitleStyle: {
+          fontSize: 20,
+          },
+        }}
+      />
     </Stack>
   );
 }
