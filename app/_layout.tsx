@@ -1,7 +1,8 @@
+import { Ionicons } from '@expo/vector-icons';
 import { getAuth, onAuthStateChanged } from '@react-native-firebase/auth';
 import { Stack, useRouter } from 'expo-router';
 import React, { useEffect, useState } from 'react';
-import { ActivityIndicator, View } from 'react-native';
+import { ActivityIndicator, TouchableOpacity, View } from 'react-native';
 
 export default function RootLayout() {
   const [isAuthChecked, setIsAuthChecked] = useState(false);
@@ -79,6 +80,24 @@ export default function RootLayout() {
           headerTintColor: 'black' ,
           headerTitleStyle: {
           fontSize: 20,
+          },
+          headerRight: () => (
+            <TouchableOpacity onPress={() => router.push('./parcelroute')}
+               style={{ marginRight: 10 }}>
+              <Ionicons name='information-circle-outline' size={24} />
+            </TouchableOpacity>
+    ),
+        }}
+      />
+      <Stack.Screen
+        name="parcelroute"
+        options={{
+          headerTitle: 'Parcel',
+          headerTitleAlign: 'center',
+          headerTintColor: 'black' ,
+          headerTitleStyle: {
+          fontSize: 20,
+          fontWeight: 'bold',
           },
         }}
       />
