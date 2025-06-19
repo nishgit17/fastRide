@@ -1,48 +1,104 @@
-import React, { useState } from 'react';
-import { ScrollView, StyleSheet, Text, TextInput, View } from 'react-native';
+import { useLocalSearchParams } from 'expo-router';
+import React, { useEffect, useRef, useState } from 'react';
+import { StyleSheet, Text, View } from 'react-native';
+import 'react-native-get-random-values';
+import { GooglePlacesAutocomplete, GooglePlacesAutocompleteRef } from 'react-native-google-places-autocomplete';
 
+const GOOGLE_API_KEY = 'AIzaSyA-ivHxJO-Kjma_sDi9zvpjxd9nB4jZTXE'; 
 const SelectLocation = () => {
-  const [pickup, setPickup] = useState('');
+  const params = useLocalSearchParams();
+  const address = typeof params?.address === 'string' ? decodeURIComponent(params.address) : '';
+  console.log('Received address param:', address);
+
   const [drop, setDrop] = useState('');
 
+  const pickupRef = useRef<GooglePlacesAutocompleteRef>(null);
+  const dropRef = useRef<GooglePlacesAutocompleteRef>(null);
+
+  useEffect(() => {
+    if (pickupRef.current && address) {
+      pickupRef.current.setAddressText(address);
+    }
+  }, [address]);
+
   return (
-    <ScrollView contentContainerStyle={styles.container}>
-      {/* Pickup Container */}
+    <View style={styles.container}>
+      {/* Pickup */}
       <View style={styles.locationContainer}>
         <View style={styles.labelRow}>
           <View style={[styles.dot, { backgroundColor: 'green' }]} />
           <Text style={[styles.label, { color: 'green' }]}>Pickup</Text>
         </View>
-        <TextInput
-          style={styles.input}
+        <GooglePlacesAutocomplete
+          ref={pickupRef}
           placeholder="Your Current Location"
-          placeholderTextColor="#666"
-          value={pickup}
-          onChangeText={setPickup}
+          fetchDetails
+          onPress={(data, details = null) => {
+            if (details?.geometry?.location) {
+              const { lat, lng } = details.geometry.location;
+              console.log('Pickup coords:', lat, lng);
+            } else {
+              console.warn('No location details found');
+            }
+          }}
+          query={{
+            key: GOOGLE_API_KEY,
+            language: 'en',
+          }}
+          predefinedPlaces={[]}
+          styles={{
+            textInput: styles.input,
+            container: { flex: 0 },
+          }}
+          textInputProps={{
+            defaultValue: address,
+            onFocus: () => {},
+          }}
         />
+
       </View>
 
-      {/* Drop Container */}
+      {/* Drop */}
       <View style={styles.locationContainer}>
         <View style={styles.labelRow}>
           <View style={[styles.dot, { backgroundColor: 'red' }]} />
           <Text style={[styles.label, { color: 'red' }]}>Drop</Text>
         </View>
-        <TextInput
-          style={styles.input}
+        <GooglePlacesAutocomplete
+          ref={dropRef}
           placeholder="Search Drop Location"
-          placeholderTextColor="#666"
-          value={drop}
-          onChangeText={setDrop}
+          fetchDetails
+          onPress={(data, details = null) => {
+            if (details && details.geometry && details.geometry.location) {
+              const { lat, lng } = details.geometry.location;
+              console.log('Drop coords:', lat, lng);
+            } else {
+              console.warn('No location details found');
+            }
+          }}
+          query={{
+            key: GOOGLE_API_KEY,
+            language: 'en',
+          }}
+          predefinedPlaces={[]}
+          styles={{
+            textInput: styles.input,
+            container: { flex: 0 },
+          }}
+          textInputProps={{
+            defaultValue: '',
+            onFocus: () => {},
+          }}
         />
       </View>
 
       <Text style={styles.sectionTitle}>Drop Suggestions</Text>
-    </ScrollView>
+    </View>
   );
 };
 
 export default SelectLocation;
+
 
 
 const styles = StyleSheet.create({

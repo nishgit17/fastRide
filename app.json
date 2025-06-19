@@ -11,7 +11,10 @@
     "ios": {
       "supportsTablet": true,
       "googleServicesFile": "./ios/fastRide/GoogleService-Info.plist",
-      "bundleIdentifier": "com.nishantapp.fastRide"
+      "bundleIdentifier": "com.nishantapp.fastRide",
+      "infoPlist": {
+        "NSLocationWhenInUseUsageDescription": "We need your location to show addresses on the map."
+      }
     },
     "android": {
       "adaptiveIcon": {
@@ -21,6 +24,7 @@
       "edgeToEdgeEnabled": true,
       "package": "com.nishantapp.fastRide",
       "googleServicesFile": "android/app/google-services.json",
+      "permissions": ["ACCESS_FINE_LOCATION"],
       "config": {
         "googleMaps": {
           "apiKey": "AIzaSyCLVlmceJF7PXpWwsmc9OUKDLTNlAGVXms"
