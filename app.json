@@ -52,6 +52,19 @@
         }
       ],
       [
+        "@rnmapbox/maps",
+        {
+          "RNMapboxMapsDownloadToken": "sk.eyJ1Ijoic3VtYW4wMDA5IiwiYSI6ImNtYzR6NjRoczBoZHIyaXNhZXR3N29neG8ifQ.Gby7uQba230r8t7Jymaexg",
+          "RNMapboxMapsVersion": "11.1.0"
+        }
+      ],
+      [
+        "expo-location",
+        {
+          "locationWhenInUsePermission": "Show current location on map"
+        }
+      ],
+      [
       "expo-maps",
       {
         "requestLocationPermission": true,
