@@ -28,7 +28,7 @@
         <key>CFBundleURLSchemes</key>
         <array>
           <string>fastride</string>
-          <string>com.nishantapp.fastRide</string>
+          <string>com.nishexpo2.fastRide</string>
         </array>
       </dict>
       <dict>
@@ -40,6 +40,8 @@
     </array>
     <key>CFBundleVersion</key>
     <string>1</string>
+    <key>GMSApiKey</key>
+    <string>AIzaSyCLVlmceJF7PXpWwsmc9OUKDLTNlAGVXms</string>
     <key>LSMinimumSystemVersion</key>
     <string>12.0</string>
     <key>LSRequiresIPhoneOS</key>

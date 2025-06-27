@@ -1,4 +1,4 @@
-package com.nishantapp.fastRide
+package com.nishexpo2.fastRide
 
 import android.app.Application
 import android.content.res.Configuration

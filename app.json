@@ -4,14 +4,17 @@
     "slug": "fastride",
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "./assets/images/icon.png",
+    "icon": "./assets/images/Icon.png",
     "scheme": "fastride",
     "userInterfaceStyle": "automatic",
     "newArchEnabled": true,
     "ios": {
       "supportsTablet": true,
       "googleServicesFile": "./ios/fastRide/GoogleService-Info.plist",
-      "bundleIdentifier": "com.nishantapp.fastRide",
+      "bundleIdentifier": "com.nishexpo2.fastRide",
+      "config": {
+        "googleMapsApiKey": "AIzaSyCLVlmceJF7PXpWwsmc9OUKDLTNlAGVXms"
+      },
       "infoPlist": {
         "NSLocationWhenInUseUsageDescription": "We need your location to show addresses on the map."
       }
@@ -22,9 +25,12 @@
         "backgroundColor": "#ffffff"
       },
       "edgeToEdgeEnabled": true,
-      "package": "com.nishantapp.fastRide",
+      "package": "com.nishexpo2.fastRide",
       "googleServicesFile": "android/app/google-services.json",
-      "permissions": ["ACCESS_FINE_LOCATION"],
+      "permissions": [
+        "ACCESS_FINE_LOCATION",
+        "ACCESS_COARSE_LOCATION"
+      ],
       "config": {
         "googleMaps": {
           "apiKey": "AIzaSyCLVlmceJF7PXpWwsmc9OUKDLTNlAGVXms"
@@ -45,17 +51,9 @@
       [
         "expo-splash-screen",
         {
-          "image": "./assets/images/splash-icon.png",
-          "imageWidth": 200,
-          "resizeMode": "contain",
-          "backgroundColor": "#ffffff"
-        }
-      ],
-      [
-        "@rnmapbox/maps",
-        {
-          "RNMapboxMapsDownloadToken": "sk.eyJ1Ijoic3VtYW4wMDA5IiwiYSI6ImNtYzR6NjRoczBoZHIyaXNhZXR3N29neG8ifQ.Gby7uQba230r8t7Jymaexg",
-          "RNMapboxMapsVersion": "11.1.0"
+          "image": "./assets/images/Icon.png",
+          "resizeMode": "cover",
+          "backgroundColor": "#000000"
         }
       ],
       [
@@ -63,16 +61,7 @@
         {
           "locationWhenInUsePermission": "Show current location on map"
         }
-      ],
-      [
-      "expo-maps",
-      {
-        "requestLocationPermission": true,
-        "locationPermission": "Allow $(PRODUCT_NAME) to use your location",
-        "googleMapsApiKey": "AIzaSyCLVlmceJF7PXpWwsmc9OUKDLTNlAGVXms"
-      }
       ]
-
     ],
     "experiments": {
       "typedRoutes": true
@@ -80,9 +69,9 @@
     "extra": {
       "router": {},
       "eas": {
-        "projectId": "7b142d98-4171-4a61-ad6a-f927ba19b956"
+        "projectId": "77a156ab-266f-471f-8b09-686de7ed2128"
       }
     },
-    "owner": "nishexpo"
+    "owner": "nishexpo2"
   }
 }

@@ -1,4 +1,4 @@
-package com.nishantapp.fastRide
+package com.nishexpo2.fastRide
 import expo.modules.splashscreen.SplashScreenManager
 
 import android.os.Build

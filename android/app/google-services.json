@@ -7,18 +7,18 @@
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:1007936869171:android:b4bc89a5f5d728d467a446",
+        "mobilesdk_app_id": "1:1007936869171:android:9d1ffc4e296cbaf067a446",
         "android_client_info": {
-          "package_name": "com.nishantapp.fastRide"
+          "package_name": "com.nishexpo2.fastRide"
         }
       },
       "oauth_client": [
         {
-          "client_id": "1007936869171-0oe6ilno8551ap5eoblgk72as8rlvq6o.apps.googleusercontent.com",
+          "client_id": "1007936869171-l5ojfb6mib99bbpa2bobfmmhdr477bgq.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
-            "package_name": "com.nishantapp.fastRide",
-            "certificate_hash": "d10d7155aac6330ee3608fe25de53b6faf28e646"
+            "package_name": "com.nishexpo2.fastRide",
+            "certificate_hash": "4e23cac5604f42ab3654591afb5fe8fbcbfdf261"
           }
         },
         {

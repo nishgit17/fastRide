@@ -1,22 +1,29 @@
-
-import { useRouter } from 'expo-router';
-import { useEffect } from 'react';
-import { Text, View } from 'react-native';
+// app/index.tsx
+import auth, { FirebaseAuthTypes } from '@react-native-firebase/auth';
+import { Redirect } from 'expo-router';
+import { useEffect, useState } from 'react';
+import { ActivityIndicator, View } from 'react-native';
 
 export default function Index() {
-  const router = useRouter();
+  const [user, setUser] = useState<FirebaseAuthTypes.User | null>(null);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const timer = setTimeout(() => {
-      router.push('/nextindex');
-    }, 1000);
+    const unsubscribe = auth().onAuthStateChanged((user) => {
+      setUser(user);
+      setLoading(false);
+    });
 
-    return () => clearTimeout(timer);
-  }, [router]);
+    return unsubscribe;
+  }, []);
 
-  return (
-    <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', backgroundColor: '#FACC15' }}>
-      <Text style={{ fontSize: 48, fontWeight: 'bold', color: '#000' }}>fastRide</Text>
-    </View>
-  );
+  if (loading) {
+    return (
+      <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+        <ActivityIndicator size="large" />
+      </View>
+    );
+  }
+
+  return <Redirect href={user ? '/drawer/home' : '/login'} />;
 }

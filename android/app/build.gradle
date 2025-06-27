@@ -97,9 +97,9 @@ packagingOptions {
     buildToolsVersion rootProject.ext.buildToolsVersion
     compileSdk rootProject.ext.compileSdkVersion
 
-    namespace 'com.nishantapp.fastRide'
+    namespace 'com.nishexpo2.fastRide'
     defaultConfig {
-        applicationId 'com.nishantapp.fastRide'
+        applicationId 'com.nishexpo2.fastRide'
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
         versionCode 1

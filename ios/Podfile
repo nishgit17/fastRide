@@ -13,9 +13,9 @@ install! 'cocoapods',
 
 prepare_react_native_project!
 
-# @generated begin @rnmapbox/maps-rnmapboxmapsimpl - expo prebuild (DO NOT MODIFY) sync-71ce0cabb33e6851ecc9945f9dbd7a44b193e68e
-$RNMapboxMapsDownloadToken = 'sk.eyJ1Ijoic3VtYW4wMDA5IiwiYSI6ImNtYzR6NjRoczBoZHIyaXNhZXR3N29neG8ifQ.Gby7uQba230r8t7Jymaexg'
-$RNMapboxMapsVersion = '11.*'
+# @generated begin @rnmapbox/maps-rnmapboxmapsimpl - expo prebuild (DO NOT MODIFY) sync-7115fe912e541f933aca30baca0b6d8da52b6bfc
+$RNMapboxMapsDownloadToken = 'sk.ey...'
+$RNMapboxMapsVersion = '11.1.0'
 # @generated end @rnmapbox/maps-rnmapboxmapsimpl
 target 'fastRide' do
   use_expo_modules!
@@ -33,6 +33,9 @@ target 'fastRide' do
     ]
   end
 
+# @generated begin react-native-maps - expo prebuild (DO NOT MODIFY) sync-e9cc66c360abe50bc66d89fffb3c55b034d7d369
+  pod 'react-native-google-maps', path: File.dirname(`node --print "require.resolve('react-native-maps/package.json')"`)
+# @generated end react-native-maps
   config = use_native_modules!(config_command)
 
   use_frameworks! :linkage => podfile_properties['ios.useFrameworks'].to_sym if podfile_properties['ios.useFrameworks']

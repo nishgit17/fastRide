@@ -3,6 +3,11 @@ import FirebaseCore
 import React
 import ReactAppDependencyProvider
 
+// @generated begin react-native-maps-import - expo prebuild (DO NOT MODIFY) sync-bee50fec513f89284e0fa3f5d935afdde33af98f
+#if canImport(GoogleMaps)
+import GoogleMaps
+#endif
+// @generated end react-native-maps-import
 @UIApplicationMain
 public class AppDelegate: ExpoAppDelegate {
   var window: UIWindow?
@@ -33,6 +38,11 @@ FirebaseApp.configure()
       launchOptions: launchOptions)
 #endif
 
+// @generated begin react-native-maps-init - expo prebuild (DO NOT MODIFY) sync-9ec28a5de649f06bc0339736842d79caaeea5800
+#if canImport(GoogleMaps)
+GMSServices.provideAPIKey("AIzaSyCLVlmceJF7PXpWwsmc9OUKDLTNlAGVXms")
+#endif
+// @generated end react-native-maps-init
     return super.application(application, didFinishLaunchingWithOptions: launchOptions)
   }
 
@@ -42,6 +52,24 @@ FirebaseApp.configure()
     open url: URL,
     options: [UIApplication.OpenURLOptionsKey: Any] = [:]
   ) -> Bool {
+// @generated begin @react-native-firebase/auth-openURL - expo prebuild (DO NOT MODIFY)
+    if url.host?.lowercased() == "firebaseauth" {
+      // invocations for Firebase Auth are handled elsewhere and should not be forwarded to Expo Router
+      return false
+    }
+// @generated end @react-native-firebase/auth-openURL
+// @generated begin @react-native-firebase/auth-openURL - expo prebuild (DO NOT MODIFY)
+    if url.host?.lowercased() == "firebaseauth" {
+      // invocations for Firebase Auth are handled elsewhere and should not be forwarded to Expo Router
+      return false
+    }
+// @generated end @react-native-firebase/auth-openURL
+// @generated begin @react-native-firebase/auth-openURL - expo prebuild (DO NOT MODIFY)
+    if url.host?.lowercased() == "firebaseauth" {
+      // invocations for Firebase Auth are handled elsewhere and should not be forwarded to Expo Router
+      return false
+    }
+// @generated end @react-native-firebase/auth-openURL
 // @generated begin @react-native-firebase/auth-openURL - expo prebuild (DO NOT MODIFY)
     if url.host?.lowercased() == "firebaseauth" {
       // invocations for Firebase Auth are handled elsewhere and should not be forwarded to Expo Router

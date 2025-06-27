@@ -16,7 +16,7 @@ export default function Nextindex() {
 
   return (
     <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', backgroundColor: "white" }}>
-      <Text style={{ fontSize: 48, fontWeight: 'bold', color: '#000' }}>rapido</Text>
+      <Text style={{ fontSize: 48, fontWeight: 'bold', color: '#000' }}>fastRide</Text>
     </View>
   );
 }

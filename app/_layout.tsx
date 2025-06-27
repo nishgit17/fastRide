@@ -20,12 +20,13 @@ export default function RootLayout() {
   }, []);
 
   useEffect(() => {
-    if (isAuthChecked) {
-      if (isLoggedIn) {
-        router.replace('/home'); // redirect if logged in
-      } else {
-        router.replace('/choice'); // redirect if not logged in
-      }
+    if (!isAuthChecked) return;
+    
+    // Use push instead of replace to maintain navigation history
+    if (isLoggedIn) {
+      router.push('/drawer/home');
+    } else {
+      router.push('/choice');
     }
   }, [isAuthChecked, isLoggedIn]);
 
@@ -39,11 +40,17 @@ export default function RootLayout() {
 
   return (
     <Stack>
+      {/* Common screens */}
       <Stack.Screen name="index" options={{ headerShown: false }} />
       <Stack.Screen name="nextindex" options={{ headerShown: false }} />
       <Stack.Screen name="choice" options={{ headerShown: false }} />
+      
+      {/* Authentication screens */}
       <Stack.Screen name="login" options={{ headerShown: false }} />
       <Stack.Screen name="Dmail" options={{ headerShown: false }} />
+      <Stack.Screen name="Dindex" options={{ headerShown: false }} />
+      <Stack.Screen name="Dlogin" options={{ headerShown: false }} />
+      <Stack.Screen name="verify" options={{ headerShown: false }} />
       <Stack.Screen
         name="Dverify"
         options={{
@@ -56,37 +63,55 @@ export default function RootLayout() {
           headerBackTitle: '.',
         }}
       />
-      <Stack.Screen name="Dindex" options={{ headerShown: false }} />
-      <Stack.Screen name="Dlogin" options={{ headerShown: false }} />
-      <Stack.Screen name="verify" options={{ headerShown: false }} />
-      <Stack.Screen name="home" options={{ headerShown: false }} />
+      
+      {/* Main app screens */}
+      <Stack.Screen name="drawer" options={{ headerShown: false }} />
       <Stack.Screen name="homemenu" options={{ headerShown: false }} />
+      <Stack.Screen name="finaliseride" options={{ headerShown: false }} />
+      
+      {/* Location/ride screens */}
       <Stack.Screen
         name="selectlocation"
         options={{
           headerTitle: 'Home',
           headerTitleAlign: 'left',
-          headerTintColor: 'blue' ,
+          headerTintColor: 'blue',
           headerTitleStyle: {
-          fontSize: 20,
+            fontSize: 20,
           },
         }}
       />
+
+      <Stack.Screen
+        name="selectlocationworking"
+        options={{
+          headerTitle: 'Home',
+          headerTitleAlign: 'left',
+          headerTintColor: 'blue',
+          headerTitleStyle: {
+            fontSize: 20,
+          },
+        }}
+      />
+      
+      {/* Parcel screens */}
       <Stack.Screen
         name="parcel"
         options={{
           headerTitle: 'Parcel',
           headerTitleAlign: 'center',
-          headerTintColor: 'black' ,
+          headerTintColor: 'black',
           headerTitleStyle: {
-          fontSize: 20,
+            fontSize: 20,
           },
           headerRight: () => (
-            <TouchableOpacity onPress={() => router.push('./parcelroute')}
-               style={{ marginRight: 10 }}>
-              <Ionicons name='information-circle-outline' size={24} />
+            <TouchableOpacity 
+              onPress={() => router.push('./parcelroute')}
+              style={{ marginRight: 10 }}
+            >
+              <Ionicons name='information-circle-outline' size={24} color="black" />
             </TouchableOpacity>
-    ),
+          ),
         }}
       />
       <Stack.Screen
@@ -94,10 +119,10 @@ export default function RootLayout() {
         options={{
           headerTitle: 'Parcel',
           headerTitleAlign: 'center',
-          headerTintColor: 'black' ,
+          headerTintColor: 'black',
           headerTitleStyle: {
-          fontSize: 20,
-          fontWeight: 'bold',
+            fontSize: 20,
+            fontWeight: 'bold',
           },
         }}
       />

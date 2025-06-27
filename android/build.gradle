@@ -4,14 +4,6 @@ buildscript {
   repositories {
     google()
     mavenCentral()
-
-    maven {
-      url 'https://api.mapbox.com/downloads/v2/releases/maven'
-      credentials {
-        username = 'mapbox'
-        password = project.properties['MAPBOX_DOWNLOADS_TOKEN'] ?: ""
-      }
-    }
   }
   dependencies {
     classpath 'com.google.firebase:firebase-crashlytics-gradle:3.0.3'
@@ -40,21 +32,8 @@ allprojects {
     google()
     mavenCentral()
     maven { url 'https://www.jitpack.io' }
-
-    // Mapbox repo with credentials
-    maven {
-      url 'https://api.mapbox.com/downloads/v2/releases/maven'
-      authentication { basic(BasicAuthentication) }
-      credentials {
-        username = 'mapbox'
-        password = project.properties['MAPBOX_DOWNLOADS_TOKEN'] ?: ""
-      }
-    }
   }
 }
 
 apply plugin: "expo-root-project"
 apply plugin: "com.facebook.react.rootproject"
-
-// @generated begin @rnmapbox/maps-v2-maven - expo prebuild (DO NOT MODIFY) sync-32f1b7024bb5099f2805443b1960a3233ccde124
-// @generated end @rnmapbox/maps-v2-maven

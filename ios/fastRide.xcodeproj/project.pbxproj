@@ -261,7 +261,7 @@
 					"-ObjC",
 					"-lc++",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = "com.nishantapp.fastRide";
+				PRODUCT_BUNDLE_IDENTIFIER = "com.nishexpo2.fastRide";
 				PRODUCT_NAME = "fastRide";
 				SWIFT_OBJC_BRIDGING_HEADER = "fastRide/fastRide-Bridging-Header.h";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
@@ -290,7 +290,7 @@
 					"-ObjC",
 					"-lc++",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = "com.nishantapp.fastRide";
+				PRODUCT_BUNDLE_IDENTIFIER = "com.nishexpo2.fastRide";
 				PRODUCT_NAME = "fastRide";
 				SWIFT_OBJC_BRIDGING_HEADER = "fastRide/fastRide-Bridging-Header.h";
 				SWIFT_VERSION = 5.0;
