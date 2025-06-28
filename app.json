@@ -13,7 +13,7 @@
       "googleServicesFile": "./ios/fastRide/GoogleService-Info.plist",
       "bundleIdentifier": "com.nishexpo2.fastRide",
       "config": {
-        "googleMapsApiKey": "AIzaSyCLVlmceJF7PXpWwsmc9OUKDLTNlAGVXms"
+        "googleMapsApiKey": "AIzaSyBYG6dio82CRVSjQ-JF1B3o5yARKa2xDLQ"
       },
       "infoPlist": {
         "NSLocationWhenInUseUsageDescription": "We need your location to show addresses on the map."
@@ -34,7 +34,7 @@
       ],
       "config": {
         "googleMaps": {
-          "apiKey": "AIzaSyCLVlmceJF7PXpWwsmc9OUKDLTNlAGVXms"
+          "apiKey": "AIzaSyBYG6dio82CRVSjQ-JF1B3o5yARKa2xDLQ"
         }
       }
     },
@@ -63,7 +63,6 @@
           "locationWhenInUsePermission": "Show current location on map"
         }
       ],
-      "expo-maps",
       "expo-web-browser",
       [
         "expo-camera",

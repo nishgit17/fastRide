@@ -18,9 +18,8 @@ import {
 } from 'react-native';
 import Image2 from '../assets/images/Untitled.png';
 
-// ✅ Configure Google Signin (replace with your real value)
 GoogleSignin.configure({
-  webClientId: 'YOUR_WEB_CLIENT_ID_HERE', // Set your real client ID from Firebase
+  webClientId: '644400249391-52t1mq1ek4neu32buqcjof31r155vis2.apps.googleusercontent.com',
   scopes: ['profile', 'email'],
 });
 

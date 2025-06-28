@@ -144,7 +144,7 @@ const Home = () => {
       <View style={{ height: 400, borderRadius: 15, overflow: 'hidden' }}>
         <MapView
           ref={mapRef}
-          style={{ flex: 1, backgroundColor: "green"}}
+          style={{ flex: 1 }}
           provider={PROVIDER_GOOGLE}
           region={region}
           showsUserLocation
