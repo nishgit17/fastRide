@@ -1,12 +1,14 @@
+import polyline from '@mapbox/polyline';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useLocalSearchParams, useRouter } from 'expo-router';
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Alert, BackHandler, Dimensions, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import MapView, { Marker, Polyline } from 'react-native-maps';
 
 const riding = () => {
   const { pickupLat, pickupLng, dropLat, dropLng, driverName, pin, durationMin, paymentMethod, rideType, amount, eta } = useLocalSearchParams();
   const router = useRouter();
+  const [polylineCoords, setPolylineCoords] = useState([]);
 
   const pickup = {
     latitude: parseFloat(pickupLat as string),
@@ -24,6 +26,25 @@ const riding = () => {
   return names[randomIndex];
   };
 
+  const fetchPolyline = async () => {
+    try {
+      const origin = `${pickup.latitude},${pickup.longitude}`;
+      const destination = `${drop.latitude},${drop.longitude}`;
+      const res = await fetch(
+        `https://maps.googleapis.com/maps/api/directions/json?origin=${origin}&destination=${destination}&key=AIzaSyA-ivHxJO-Kjma_sDi9zvpjxd9nB4jZTXE`
+      );
+      const data = await res.json();
+      if (data.routes?.[0]?.overview_polyline?.points) {
+        const points = polyline.decode(data.routes[0].overview_polyline.points);
+        const coords = points.map(([lat, lng]) => ({ latitude: lat, longitude: lng }));
+        setPolylineCoords(coords);
+      }
+    } catch (err) {
+      console.error('Polyline fetch error:', err);
+    }
+  };
+
+
   useEffect(() => {
     // Save ride info so it persists across app restarts
     const saveRideInfo = async () => {
@@ -35,6 +56,7 @@ const riding = () => {
     };
 
     saveRideInfo();
+    fetchPolyline();
 
     // Prevent back button from navigating away
     const backHandler = BackHandler.addEventListener('hardwareBackPress', () => {
@@ -60,7 +82,10 @@ const riding = () => {
       >
         <Marker coordinate={pickup} pinColor="green" title="Pickup" />
         <Marker coordinate={drop} pinColor="red" title="Drop" />
-        <Polyline coordinates={[pickup, drop]} strokeColor="#007AFF" strokeWidth={4} />
+        {polylineCoords.length > 0 && (
+          <Polyline coordinates={polylineCoords} strokeColor="#007AFF" strokeWidth={4} />
+        )}
+
       </MapView>
 
       <View style={styles.details}>

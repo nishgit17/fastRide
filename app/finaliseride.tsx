@@ -1,4 +1,5 @@
 import { FontAwesome5, MaterialCommunityIcons } from '@expo/vector-icons';
+import polyline from '@mapbox/polyline';
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import type { JSX } from 'react';
 import React, { useEffect, useRef, useState } from 'react';
@@ -65,6 +66,7 @@ const baseRides: RideOption[] = [
 ];
 
 const FinaliseRide = () => {
+  const [polylineCoords, setPolylineCoords] = useState([]);
   const { pickupLat, pickupLng, dropLat, dropLng } = useLocalSearchParams();
   const router = useRouter();
   const mapRef = useRef<MapView>(null);
@@ -103,13 +105,23 @@ const FinaliseRide = () => {
     try {
       const origin = `${pickup.latitude},${pickup.longitude}`;
       const destination = `${drop.latitude},${drop.longitude}`;
-      const res = await fetch(`https://maps.googleapis.com/maps/api/directions/json?origin=${origin}&destination=${destination}&key=${GOOGLE_API_KEY}`);
+      const res = await fetch(
+        `https://maps.googleapis.com/maps/api/directions/json?origin=${origin}&destination=${destination}&key=${GOOGLE_API_KEY}`
+      );
       const data = await res.json();
 
       if (data.routes?.[0]?.legs?.[0]) {
         const leg = data.routes[0].legs[0];
         const distanceInKm = leg.distance.value / 1000;
         const durationSec = leg.duration.value;
+
+        // Decode polyline
+        const points = polyline.decode(data.routes[0].overview_polyline.points);
+        const coords = points.map(([lat, lng]) => ({
+          latitude: lat,
+          longitude: lng,
+        }));
+        setPolylineCoords(coords);
 
         if (distanceInKm === 0 || isNaN(distanceInKm)) {
           updateRidePrices(2, 300);
@@ -162,7 +174,10 @@ const FinaliseRide = () => {
       >
         <Marker coordinate={pickup} title="Pickup Location" pinColor="green" />
         <Marker coordinate={drop} title="Drop Location" pinColor="red" />
-        <Polyline coordinates={[pickup, drop]} strokeColor="#007AFF" strokeWidth={3} />
+        {polylineCoords.length > 0 && (
+          <Polyline coordinates={polylineCoords} strokeColor="#007AFF" strokeWidth={3} />
+        )}
+
       </MapView>
 
       <TouchableOpacity style={styles.recenterButton} onPress={recenterMap}>
