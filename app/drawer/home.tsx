@@ -5,6 +5,7 @@ import { useLocalSearchParams, useRouter } from 'expo-router';
 import React, { useCallback, useEffect, useRef, useState } from 'react';
 import {
   ActivityIndicator,
+  Alert,
   BackHandler,
   Image,
   ScrollView,
@@ -58,13 +59,17 @@ const Home = () => {
   // Back-button behavior
   useEffect(() => {
     const backAction = () => {
-      BackHandler.exitApp();
+      Alert.alert('Hold on!', 'Are you sure you want to exit?', [
+        { text: 'Cancel', style: 'cancel' },
+        { text: 'Exit', onPress: () => BackHandler.exitApp() },
+      ]);
       return true;
     };
 
     const backHandler = BackHandler.addEventListener('hardwareBackPress', backAction);
     return () => backHandler.remove();
   }, []);
+
 
   // Handle coming back with params
   useEffect(() => {

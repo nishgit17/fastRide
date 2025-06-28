@@ -51,6 +51,7 @@ export default function RootLayout() {
       <Stack.Screen name="Dindex" options={{ headerShown: false }} />
       <Stack.Screen name="Dlogin" options={{ headerShown: false }} />
       <Stack.Screen name="verify" options={{ headerShown: false }} />
+      <Stack.Screen name="upipayment" options={{ headerShown: false }} />
       <Stack.Screen
         name="Dverify"
         options={{
@@ -68,6 +69,7 @@ export default function RootLayout() {
       <Stack.Screen name="drawer" options={{ headerShown: false }} />
       <Stack.Screen name="homemenu" options={{ headerShown: false }} />
       <Stack.Screen name="finaliseride" options={{ headerShown: false }} />
+      <Stack.Screen name="riding" options={{ headerShown: false }} />
       
       {/* Location/ride screens */}
       <Stack.Screen

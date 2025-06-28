@@ -7,7 +7,7 @@
     "icon": "./assets/images/Icon.png",
     "scheme": "fastride",
     "userInterfaceStyle": "automatic",
-    "newArchEnabled": true,
+    "newArchEnabled": false,
     "ios": {
       "supportsTablet": true,
       "googleServicesFile": "./ios/fastRide/GoogleService-Info.plist",
@@ -29,7 +29,8 @@
       "googleServicesFile": "android/app/google-services.json",
       "permissions": [
         "ACCESS_FINE_LOCATION",
-        "ACCESS_COARSE_LOCATION"
+        "ACCESS_COARSE_LOCATION",
+        "CAMERA"
       ],
       "config": {
         "googleMaps": {
@@ -60,6 +61,16 @@
         "expo-location",
         {
           "locationWhenInUsePermission": "Show current location on map"
+        }
+      ],
+      "expo-maps",
+      "expo-web-browser",
+      [
+        "expo-camera",
+        {
+          "cameraPermission": "Allow $(PRODUCT_NAME) to access your camera",
+          "microphonePermission": "Allow $(PRODUCT_NAME) to access your microphone",
+          "recordAudioAndroid": true
         }
       ]
     ],

@@ -75,6 +75,8 @@ const FinaliseRide = () => {
     longitude: parseFloat(pickupLng as string) || defaultCoords.longitude,
   };
 
+  const pin = Math.floor(1000 + Math.random() * 9000).toString();
+
   const drop = {
     latitude: parseFloat(dropLat as string) || defaultCoords.latitude + 0.01,
     longitude: parseFloat(dropLng as string) || defaultCoords.longitude + 0.01,
@@ -216,8 +218,26 @@ const FinaliseRide = () => {
               </View>
             )}
           </View>
-
-          <TouchableOpacity style={styles.bookButton}>
+          <TouchableOpacity
+            style={styles.bookButton}
+            onPress={() => {
+              const pin = Math.floor(1000 + Math.random() * 9000).toString(); // Generate 4-digit pin
+              router.push({
+                pathname: '/riding',
+                params: {
+                  pickupLat: pickup.latitude.toString(),
+                  pickupLng: pickup.longitude.toString(),
+                  dropLat: drop.latitude.toString(),
+                  dropLng: drop.longitude.toString(),
+                  rideType: selectedRide.type,
+                  pin,
+                  durationMin: selectedRide.durationMin?.toString() || '0',
+                  paymentMethod,
+                  amount: selectedRide.price.toString(),
+                },
+              });
+            }}
+          >
             <Text style={styles.bookText}>Book {selectedRide.type}</Text>
           </TouchableOpacity>
         </View>

@@ -1,6 +1,7 @@
 import { useRouter } from 'expo-router';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
+  BackHandler,
   Keyboard,
   KeyboardAvoidingView,
   Platform,
@@ -8,6 +9,7 @@ import {
   Text,
   TextInput,
   TouchableOpacity,
+  Linking,
   TouchableWithoutFeedback,
   View,
 } from 'react-native';
@@ -43,6 +45,15 @@ const SelectLocation = () => {
 
   const [pickupCoords, setPickupCoords] = useState<{ lat: number; lng: number } | null>(null);
   const [dropCoords, setDropCoords] = useState<{ lat: number; lng: number } | null>(null);
+  useEffect(() => {
+  const backAction = () => {
+    BackHandler.exitApp();
+    return true;
+  };
+
+  const backHandler = BackHandler.addEventListener('hardwareBackPress', backAction);
+  return () => backHandler.remove();
+}, []);
 
   const handlePickupBlur = async () => {
     const coords = await fetchCoordinatesFromAddress(pickupText);
