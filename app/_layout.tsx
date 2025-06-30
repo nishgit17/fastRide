@@ -69,6 +69,7 @@ export default function RootLayout() {
       <Stack.Screen name="drawer" options={{ headerShown: false }} />
       <Stack.Screen name="homemenu" options={{ headerShown: false }} />
       <Stack.Screen name="finaliseride" options={{ headerShown: false }} />
+      <Stack.Screen name="finaliseparcelride" options={{ headerShown: false }} />
       <Stack.Screen name="riding" options={{ headerShown: false }} />
       
       {/* Location/ride screens */}
@@ -76,6 +77,18 @@ export default function RootLayout() {
         name="selectlocation"
         options={{
           headerTitle: 'Home',
+          headerTitleAlign: 'left',
+          headerTintColor: 'blue',
+          headerTitleStyle: {
+            fontSize: 20,
+          },
+        }}
+      />
+
+      <Stack.Screen
+        name="parcellocation"
+        options={{
+          headerTitle: 'Parcel',
           headerTitleAlign: 'left',
           headerTintColor: 'blue',
           headerTitleStyle: {

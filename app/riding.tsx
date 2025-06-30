@@ -46,7 +46,6 @@ const riding = () => {
 
 
   useEffect(() => {
-    // Save ride info so it persists across app restarts
     const saveRideInfo = async () => {
       await AsyncStorage.setItem('currentRide', JSON.stringify({
         pickupLat, pickupLng, dropLat, dropLng,
@@ -58,9 +57,8 @@ const riding = () => {
     saveRideInfo();
     fetchPolyline();
 
-    // Prevent back button from navigating away
     const backHandler = BackHandler.addEventListener('hardwareBackPress', () => {
-      BackHandler.exitApp(); // Exit app directly
+      BackHandler.exitApp(); 
       return true;
     });
 

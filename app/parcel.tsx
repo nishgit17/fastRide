@@ -1,3 +1,4 @@
+import { useRouter } from 'expo-router';
 import React from 'react';
 import { Dimensions, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 
@@ -20,6 +21,7 @@ const features = [
 
   },
 ];
+const router = useRouter();
 
 export default function ParcelScreen() {
   return (
@@ -48,11 +50,11 @@ export default function ParcelScreen() {
           You can send and receive packages with our parcel services
         </Text>
 
-        <TouchableOpacity style={styles.sendBtn}>
+        <TouchableOpacity style={styles.sendBtn} onPress={() => router.push('/parcellocation')}>
           <Text style={styles.sendText}>Send Parcel</Text>
         </TouchableOpacity>
 
-        <TouchableOpacity style={styles.receiveBtn}>
+        <TouchableOpacity style={styles.receiveBtn} onPress={() => router.push('/parcellocation')}>
           <Text style={styles.receiveText}>Receive Parcel</Text>
         </TouchableOpacity>
       </View>

@@ -33,7 +33,6 @@ const Home = () => {
   const [selectedAddress, setSelectedAddress] = useState('');
   const [loadingLoc, setLoadingLoc] = useState(true);
 
-  // Ask permission & get current position
   useEffect(() => {
     (async () => {
       try {
@@ -56,7 +55,6 @@ const Home = () => {
     })();
   }, []);
 
-  // Back-button behavior
   useEffect(() => {
     const backAction = () => {
       Alert.alert('Hold on!', 'Are you sure you want to exit?', [
@@ -71,7 +69,6 @@ const Home = () => {
   }, []);
 
 
-  // Handle coming back with params
   useEffect(() => {
     if (!params) return;
     
@@ -94,7 +91,6 @@ const Home = () => {
     }
   }, [params]);
 
-  // Ensure map recenters on returning to screen
   useFocusEffect(
     useCallback(() => {
       if (mapRef.current && !params?.lat && !params?.lng) {

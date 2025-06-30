@@ -9,9 +9,8 @@ import {
   Text,
   TextInput,
   TouchableOpacity,
-  Linking,
   TouchableWithoutFeedback,
-  View,
+  View
 } from 'react-native';
 
 const GOOGLE_API_KEY = 'AIzaSyA-ivHxJO-Kjma_sDi9zvpjxd9nB4jZTXE';
