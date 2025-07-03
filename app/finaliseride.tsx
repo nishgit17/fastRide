@@ -1,5 +1,7 @@
 import { FontAwesome5, MaterialCommunityIcons } from '@expo/vector-icons';
 import polyline from '@mapbox/polyline';
+import auth from '@react-native-firebase/auth';
+import firestore from '@react-native-firebase/firestore';
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import type { JSX } from 'react';
 import React, { useEffect, useRef, useState } from 'react';
@@ -19,11 +21,11 @@ const GOOGLE_API_KEY = 'AIzaSyA-ivHxJO-Kjma_sDi9zvpjxd9nB4jZTXE';
 
 interface RideOption {
   type: string;
-  description: string;
+  description?: string;
   people: number;
   fastest?: boolean;
   price: number;
-  durationMin: number | null;
+  durationMin: number;
   icon: JSX.Element;
 }
 
@@ -34,7 +36,7 @@ const baseRides: RideOption[] = [
     people: 1,
     fastest: true,
     price: 0,
-    durationMin: null,
+    durationMin: 0,
     icon: <MaterialCommunityIcons name="motorbike" size={28} color="black" />,
   },
   {
@@ -42,7 +44,7 @@ const baseRides: RideOption[] = [
     description: '',
     people: 4,
     price: 0,
-    durationMin: null,
+    durationMin: 0,
     icon: <FontAwesome5 name="car" size={28} color="black" />,
   },
   {
@@ -50,7 +52,7 @@ const baseRides: RideOption[] = [
     description: '',
     people: 4,
     price: 0,
-    durationMin: null,
+    durationMin: 0,
     icon: (
       <View style={{ position: 'relative' }}>
         <FontAwesome5 name="car" size={28} color="#007AFF" />
@@ -65,6 +67,8 @@ const baseRides: RideOption[] = [
   },
 ];
 
+const screenHeight = Dimensions.get('window').height;
+
 const FinaliseRide = () => {
   const [polylineCoords, setPolylineCoords] = useState([]);
   const { pickupLat, pickupLng, dropLat, dropLng } = useLocalSearchParams();
@@ -77,18 +81,18 @@ const FinaliseRide = () => {
     longitude: parseFloat(pickupLng as string) || defaultCoords.longitude,
   };
 
-  const pin = Math.floor(1000 + Math.random() * 9000).toString();
-
   const drop = {
     latitude: parseFloat(dropLat as string) || defaultCoords.latitude + 0.01,
     longitude: parseFloat(dropLng as string) || defaultCoords.longitude + 0.01,
   };
 
   const [availableRides, setAvailableRides] = useState<RideOption[]>(baseRides);
-  const [selectedRide, setSelectedRide] = useState<RideOption>(baseRides[0]);
+  const [selectedRide, setSelectedRide] = useState<RideOption | null>(baseRides[0]);
   const [isLoading, setIsLoading] = useState(true);
   const [paymentMethod, setPaymentMethod] = useState<'Cash' | 'UPI'>('Cash');
   const [showPaymentOptions, setShowPaymentOptions] = useState(false);
+
+  const pin = Math.floor(1000 + Math.random() * 9000).toString();
 
   const recenterMap = () => {
     if (mapRef.current) {
@@ -115,9 +119,8 @@ const FinaliseRide = () => {
         const distanceInKm = leg.distance.value / 1000;
         const durationSec = leg.duration.value;
 
-        // Decode polyline
         const points = polyline.decode(data.routes[0].overview_polyline.points);
-        const coords = points.map(([lat, lng]) => ({
+        const coords = points.map(([lat, lng]: [number, number]) => ({
           latitude: lat,
           longitude: lng,
         }));
@@ -158,6 +161,30 @@ const FinaliseRide = () => {
     return () => backHandler.remove();
   }, []);
 
+  const bookRideInFirestore = async () => {
+    const currentUser = auth().currentUser;
+    if (!currentUser || !selectedRide) return;
+
+    const rideData = {
+      riderId: currentUser.uid,
+      pickup,
+      drop,
+      rideType: selectedRide.type,
+      price: selectedRide.price,
+      paymentMethod,
+      durationMin: selectedRide.durationMin,
+      status: 'pending',
+      createdAt: firestore.FieldValue.serverTimestamp(),
+      pin,
+    };
+
+    try {
+      await firestore().collection('rides').add(rideData);
+    } catch (error) {
+      console.error('Error saving ride:', error);
+    }
+  };
+
   return (
     <View style={styles.container}>
       <MapView
@@ -177,7 +204,6 @@ const FinaliseRide = () => {
         {polylineCoords.length > 0 && (
           <Polyline coordinates={polylineCoords} strokeColor="#007AFF" strokeWidth={3} />
         )}
-
       </MapView>
 
       <TouchableOpacity style={styles.recenterButton} onPress={recenterMap}>
@@ -233,28 +259,30 @@ const FinaliseRide = () => {
               </View>
             )}
           </View>
-          <TouchableOpacity
-            style={styles.bookButton}
-            onPress={() => {
-              const pin = Math.floor(1000 + Math.random() * 9000).toString(); // Generate 4-digit pin
-              router.push({
-                pathname: '/riding',
-                params: {
-                  pickupLat: pickup.latitude.toString(),
-                  pickupLng: pickup.longitude.toString(),
-                  dropLat: drop.latitude.toString(),
-                  dropLng: drop.longitude.toString(),
-                  rideType: selectedRide.type,
-                  pin,
-                  durationMin: selectedRide.durationMin?.toString() || '0',
-                  paymentMethod,
-                  amount: selectedRide.price.toString(),
-                },
-              });
-            }}
-          >
-            <Text style={styles.bookText}>Book {selectedRide.type}</Text>
-          </TouchableOpacity>
+          {selectedRide && (
+            <TouchableOpacity
+              style={styles.bookButton}
+              onPress={async () => {
+                await bookRideInFirestore();
+                router.push({
+                  pathname: '/riding',
+                  params: {
+                    pickupLat: pickup.latitude.toString(),
+                    pickupLng: pickup.longitude.toString(),
+                    dropLat: drop.latitude.toString(),
+                    dropLng: drop.longitude.toString(),
+                    rideType: selectedRide.type,
+                    pin,
+                    durationMin: selectedRide.durationMin?.toString() || '0',
+                    paymentMethod,
+                    amount: selectedRide.price.toString(),
+                  },
+                });
+              }}
+            >
+              <Text style={styles.bookText}>Book {selectedRide.type}</Text>
+            </TouchableOpacity>
+          )}
         </View>
       </View>
     </View>
@@ -262,8 +290,6 @@ const FinaliseRide = () => {
 };
 
 export default FinaliseRide;
-
-const screenHeight = Dimensions.get('window').height;
 
 const styles = StyleSheet.create({
   container: { flex: 1, backgroundColor: '#fff' },

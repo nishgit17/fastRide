@@ -71,6 +71,8 @@ export default function RootLayout() {
       <Stack.Screen name="finaliseride" options={{ headerShown: false }} />
       <Stack.Screen name="finaliseparcelride" options={{ headerShown: false }} />
       <Stack.Screen name="riding" options={{ headerShown: false }} />
+      <Stack.Screen name="driverprocess" options={{ headerShown: false }} />
+      <Stack.Screen name="dprofile" options={{ headerShown: false }} />
       
       {/* Location/ride screens */}
       <Stack.Screen

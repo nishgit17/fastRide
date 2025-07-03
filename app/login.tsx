@@ -1,7 +1,7 @@
 import auth, { FirebaseAuthTypes } from '@react-native-firebase/auth';
 import firestore from '@react-native-firebase/firestore';
 import { GoogleSignin } from '@react-native-google-signin/google-signin';
-import { usePathname, useRouter } from 'expo-router';
+import { useRouter } from 'expo-router';
 import React, { useState } from 'react';
 import {
   Alert,
@@ -25,8 +25,7 @@ GoogleSignin.configure({
 
 const LoginScreen = () => {
   const router = useRouter();
-  const pathname = usePathname();
-  const role = pathname.includes('Dindex') ? 'driver' : 'rider';
+  const role = 'rider'; // hardcoded role
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [isSignUp, setIsSignUp] = useState(false);

@@ -1,7 +1,7 @@
 import auth, { FirebaseAuthTypes } from '@react-native-firebase/auth';
 import firestore from '@react-native-firebase/firestore';
 import { GoogleSignin } from '@react-native-google-signin/google-signin';
-import { usePathname, useRouter } from 'expo-router';
+import { useRouter } from 'expo-router';
 import React, { useState } from 'react';
 import {
   Alert,
@@ -24,8 +24,7 @@ GoogleSignin.configure({
 
 const Dmail = () => {
   const router = useRouter();
-  const pathname = usePathname();
-  const role = pathname.includes('Dindex') ? 'driver' : 'rider';
+  const role = 'driver'; // hardcoded driver role
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [isSignUp, setIsSignUp] = useState(false);
@@ -76,7 +75,7 @@ const Dmail = () => {
         userCredential = await auth().signInWithEmailAndPassword(email, password);
       }
       await saveUserToFirestore(userCredential.user);
-      router.push('/drawer/home');
+      router.push('/driverprocess');
     } catch (error) {
       const message = error instanceof Error ? error.message : 'An error occurred.';
       Alert.alert(isSignUp ? 'Signup Failed' : 'Login Failed', message);
@@ -93,7 +92,7 @@ const Dmail = () => {
       const googleCredential = auth.GoogleAuthProvider.credential(userInfo.idToken);
       const userCredential = await auth().signInWithCredential(googleCredential);
       await saveUserToFirestore(userCredential.user);
-      router.push('/drawer/home');
+      router.push('/driverprocess');
     } catch (error) {
       const message = error instanceof Error ? error.message : 'An error occurred.';
       Alert.alert('Google Sign-In Failed', message);
