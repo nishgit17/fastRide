@@ -72,7 +72,7 @@ const DriverProcess = () => {
       .collection('rides')
       .where('status', '==', 'pending')
       .onSnapshot(async (snapshot) => {
-const rides: Ride[] = snapshot.docs.map((doc) => {
+  const rides: Ride[] = snapshot.docs.map((doc) => {
   const data = doc.data();
   const pickup = data.pickup || {};
 
@@ -87,7 +87,7 @@ const rides: Ride[] = snapshot.docs.map((doc) => {
     dropLat: data.drop?.latitude ?? 0,
     dropLng: data.drop?.longitude ?? 0,
     rideType: data.rideType || '',
-    amount: Number(pickup.price) || 0,
+    amount: typeof data?.price === 'number' ? data.price : 0,
     durationMin: Number(data.durationMin) || 0,
   };
 });
@@ -116,11 +116,24 @@ const rides: Ride[] = snapshot.docs.map((doc) => {
         driverId: user.uid,
         acceptedAt: firestore.FieldValue.serverTimestamp(),
       });
+
       setSelectedRide(ride);
-      Alert.alert('Ride Accepted', 'You have accepted the ride request.');
+
+      router.push({
+        pathname: '/driding',
+        params: {
+          pickupLat: ride.pickupLat.toString(),
+          pickupLng: ride.pickupLng.toString(),
+          dropLat: ride.dropLat.toString(),
+          dropLng: ride.dropLng.toString(),
+          rideType: ride.rideType,
+          amount: ride.amount.toString(),
+          durationMin: ride.durationMin.toString(),
+          fromDriver: 'true', // Optional flag if you want to differentiate
+        },
+      });
     } catch (error) {
       console.error('Accept Ride Error:', error);
-      Alert.alert('Error', 'Could not accept ride.');
     }
   };
 
@@ -129,12 +142,12 @@ const rides: Ride[] = snapshot.docs.map((doc) => {
       await firestore().collection('rides').doc(rideId).update({
         status: 'rejected',
       });
-      Alert.alert('Ride Rejected', 'You have rejected the ride request.');
+      // Removed Alert
     } catch (error) {
       console.error('Reject Ride Error:', error);
-      Alert.alert('Error', 'Could not reject ride.');
     }
   };
+
 
   return (
     <View style={styles.container}>

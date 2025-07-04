@@ -10,6 +10,7 @@ import {
   BackHandler,
   Dimensions,
   FlatList,
+  Modal,
   StyleSheet,
   Text,
   TouchableOpacity,
@@ -91,6 +92,7 @@ const FinaliseRide = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [paymentMethod, setPaymentMethod] = useState<'Cash' | 'UPI'>('Cash');
   const [showPaymentOptions, setShowPaymentOptions] = useState(false);
+  const [searching, setSearching] = useState(false);
 
   const pin = Math.floor(1000 + Math.random() * 9000).toString();
 
@@ -161,13 +163,31 @@ const FinaliseRide = () => {
     return () => backHandler.remove();
   }, []);
 
+  useEffect(() => {
+    const backHandler = BackHandler.addEventListener('hardwareBackPress', () => {
+      if (searching) {
+        setSearching(false);
+        return true; // prevent default back
+      }
+      router.replace('/drawer/home');
+      return true;
+    });
+
+    fetchDistance();
+    return () => backHandler.remove();
+  }, [searching]);
+
+
   const bookRideInFirestore = async () => {
     const currentUser = auth().currentUser;
     if (!currentUser || !selectedRide) return;
 
     const rideData = {
       riderId: currentUser.uid,
-      pickup,
+      pickup: {
+        ...pickup,
+        price: selectedRide.price,
+      },
       drop,
       rideType: selectedRide.type,
       price: selectedRide.price,
@@ -179,7 +199,8 @@ const FinaliseRide = () => {
     };
 
     try {
-      await firestore().collection('rides').add(rideData);
+      const rideRef = await firestore().collection('rides').add(rideData);
+      return rideRef;
     } catch (error) {
       console.error('Error saving ride:', error);
     }
@@ -263,20 +284,33 @@ const FinaliseRide = () => {
             <TouchableOpacity
               style={styles.bookButton}
               onPress={async () => {
-                await bookRideInFirestore();
-                router.push({
-                  pathname: '/riding',
-                  params: {
-                    pickupLat: pickup.latitude.toString(),
-                    pickupLng: pickup.longitude.toString(),
-                    dropLat: drop.latitude.toString(),
-                    dropLng: drop.longitude.toString(),
-                    rideType: selectedRide.type,
-                    pin,
-                    durationMin: selectedRide.durationMin?.toString() || '0',
-                    paymentMethod,
-                    amount: selectedRide.price.toString(),
-                  },
+                setSearching(true);
+                const rideRef = await bookRideInFirestore();
+                if (!rideRef) {
+                  setSearching(false);
+                  return;
+                }
+
+                const unsubscribe = rideRef.onSnapshot((doc) => {
+                  const data = doc.data();
+                  if (data?.status === 'accepted') {
+                    unsubscribe(); // Stop listening
+                    setSearching(false);
+                    router.push({
+                      pathname: '/riding',
+                      params: {
+                        pickupLat: pickup.latitude.toString(),
+                        pickupLng: pickup.longitude.toString(),
+                        dropLat: drop.latitude.toString(),
+                        dropLng: drop.longitude.toString(),
+                        rideType: selectedRide.type,
+                        pin: data.pin?.toString() ?? '', 
+                        durationMin: selectedRide.durationMin?.toString() || '0',
+                        paymentMethod,
+                        amount: selectedRide.price.toString(),
+                      },
+                    });
+                  }
                 });
               }}
             >
@@ -285,6 +319,16 @@ const FinaliseRide = () => {
           )}
         </View>
       </View>
+
+      {/* Searching Modal */}
+      <Modal animationType="fade" transparent visible={searching}>
+        <View style={styles.modalOverlay}>
+          <View style={styles.modalBox}>
+            <ActivityIndicator size="large" color="#007AFF" />
+            <Text style={styles.modalText}>Searching for your ride…</Text>
+          </View>
+        </View>
+      </Modal>
     </View>
   );
 };
@@ -350,4 +394,17 @@ const styles = StyleSheet.create({
     borderRadius: 10, alignItems: 'center', marginTop: 16,
   },
   bookText: { fontWeight: 'bold', fontSize: 18, color: '#000' },
+  modalOverlay: {
+    flex: 1, backgroundColor: 'rgba(0,0,0,0.4)',
+    justifyContent: 'center', alignItems: 'center',
+  },
+  modalBox: {
+    backgroundColor: '#fff',
+    padding: 20, borderRadius: 12,
+    alignItems: 'center', elevation: 5,
+  },
+  modalText: {
+    marginTop: 10, fontSize: 16,
+    color: '#000', fontWeight: '500',
+  },
 });
