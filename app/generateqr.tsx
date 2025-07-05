@@ -1,6 +1,8 @@
+import auth from '@react-native-firebase/auth';
+import firestore from '@react-native-firebase/firestore';
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import React from 'react';
-import { Dimensions, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { Alert, Dimensions, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import QRCode from 'react-native-qrcode-svg';
 
 const UpiPayment = () => {
@@ -14,6 +16,44 @@ const UpiPayment = () => {
   const upiId = 'rider@upi'; // Replace with dynamic or fetched value if needed
   const upiUrl = `upi://pay?pa=${upiId}&pn=${driverName}&am=${amount}&cu=INR`;
 
+  const handleContinue = async () => {
+    try {
+      const user = auth().currentUser;
+      if (!user) {
+        Alert.alert('Error', 'Driver not logged in.');
+        return;
+      }
+
+      const amt = parseFloat(amount as string);
+      if (isNaN(amt) || amt <= 0) {
+        Alert.alert('Invalid Amount', 'The amount to be added is not valid.');
+        return;
+      }
+  const driverRef = firestore().collection('users').doc(user.uid);
+  const driverDoc = await driverRef.get();
+  const driverData = driverDoc.data();
+  const currentWallet = typeof driverData?.wallet === 'number' ? driverData.wallet : 0;
+
+
+      await driverRef.update({
+        wallet: currentWallet + amt,
+        transactions: firestore.FieldValue.arrayUnion({
+          amount: amt,
+          from: upiId,
+          type: 'UPI Credit',
+          timestamp: new Date().toISOString(),
+        }),
+      });
+
+      Alert.alert('Payment Added', `₹${amt} has been added to your wallet.`);
+      router.replace('/driverprocess');
+
+    } catch (error) {
+      console.error('Wallet update error:', error);
+      Alert.alert('Error', 'Something went wrong while updating the wallet.');
+    }
+  };
+
   return (
     <View style={styles.container}>
       <Text style={styles.title}>Scan to Pay</Text>
@@ -25,7 +65,7 @@ const UpiPayment = () => {
 
       <TouchableOpacity
         style={styles.continueButton}
-        onPress={() => router.replace('/driverprocess')}
+        onPress={handleContinue}
       >
         <Text style={styles.continueText}>Continue</Text>
       </TouchableOpacity>

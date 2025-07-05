@@ -68,7 +68,7 @@ const styles = StyleSheet.create({
     fontSize: 16, // approx text-base
     color: '#6b7280', // approximate gray color
     marginTop: 20,
-    marginBottom: 176,
+    marginBottom: 156,
   },
   button: {
     backgroundColor: 'black',
@@ -76,6 +76,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 24,
     paddingVertical: 12,
     marginBottom: 16,
+  
   },
   buttonText: {
     color: 'white',
