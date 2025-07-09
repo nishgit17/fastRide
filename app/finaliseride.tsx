@@ -181,9 +181,13 @@ const FinaliseRide = () => {
   const bookRideInFirestore = async () => {
     const currentUser = auth().currentUser;
     if (!currentUser || !selectedRide) return;
+    const userDoc = await firestore().collection('users').doc(currentUser.uid).get();
+    const riderName = userDoc.data()?.name || 'Unknown';
+
 
     const rideData = {
       riderId: currentUser.uid,
+      riderName,
       pickup: {
         ...pickup,
         price: selectedRide.price,
@@ -299,6 +303,7 @@ const FinaliseRide = () => {
                     router.push({
                       pathname: '/riding',
                       params: {
+                        rideId: rideRef.id, 
                         pickupLat: pickup.latitude.toString(),
                         pickupLng: pickup.longitude.toString(),
                         dropLat: drop.latitude.toString(),

@@ -16,7 +16,7 @@ const Dindex = () => {
   return (
     <View style={styles.container}>
       <View style={styles.centerContent}>
-        <Text style={styles.header}>rapido</Text>
+        <Text style={styles.header}>fastRide</Text>
         <Text style={styles.subHeader}>Captain</Text>
         <ActivityIndicator size="small" color="#FFD700" style={styles.loadingIndicator} />
         <Text style={styles.waitText}>Please Wait...</Text>

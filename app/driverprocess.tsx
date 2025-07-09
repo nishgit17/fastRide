@@ -47,9 +47,30 @@ const DriverProcess = () => {
   const [rideRequests, setRideRequests] = useState<Ride[]>([]);
   const [selectedRide, setSelectedRide] = useState<Ride | null>(null);
   const [addresses, setAddresses] = useState<Record<string, { pickup: string; drop: string }>>({});
+  const [driverName, setDriverName] = useState<string>('Unknown');
   const mapRef = useRef<MapView>(null);
-  const user = auth().currentUser;
   const router = useRouter();
+  const user = auth().currentUser;
+
+  useEffect(() => {
+    const fetchDriverName = async () => {
+      const currentUser = auth().currentUser;
+      if (!currentUser) {
+        console.error('No driver is currently logged in');
+        return;
+      }
+
+      try {
+        const driverDoc = await firestore().collection('users').doc(currentUser.uid).get();
+        const name = driverDoc.data()?.name || 'Unknown';
+        setDriverName(name);
+      } catch (error) {
+        console.error('Failed to fetch driver name:', error);
+      }
+    };
+
+    fetchDriverName();
+  }, []);
 
   useEffect(() => {
     (async () => {
@@ -72,26 +93,22 @@ const DriverProcess = () => {
       .collection('rides')
       .where('status', '==', 'pending')
       .onSnapshot(async (snapshot) => {
-  const rides: Ride[] = snapshot.docs.map((doc) => {
-  const data = doc.data();
-  const pickup = data.pickup || {};
+        const rides: Ride[] = snapshot.docs.map((doc) => {
+          const data = doc.data();
+          const pickup = data.pickup || {};
 
-  console.log('Ride:', doc.id);
-  console.log('pickup.price:', pickup.price);
-  console.log('parsed amount:', Number(pickup.price));
-
-  return {
-    id: doc.id,
-    pickupLat: pickup.latitude ?? 0,
-    pickupLng: pickup.longitude ?? 0,
-    dropLat: data.drop?.latitude ?? 0,
-    dropLng: data.drop?.longitude ?? 0,
-    rideType: data.rideType || '',
-    amount: typeof data?.price === 'number' ? data.price : 0,
-    durationMin: Number(data.durationMin) || 0,
-  };
-});
-
+          return {
+            id: doc.id,
+            pickupLat: pickup.latitude ?? 0,
+            pickupLng: pickup.longitude ?? 0,
+            dropLat: data.drop?.latitude ?? 0,
+            dropLng: data.drop?.longitude ?? 0,
+            rideType: data.rideType || '',
+            amount: typeof data?.price === 'number' ? data.price : 0,
+            durationMin: Number(data.durationMin) || 0,
+            pin: data.pin || '',
+          };
+        });
 
         setRideRequests(rides.filter((ride) => ride.id !== selectedRide?.id));
 
@@ -114,6 +131,7 @@ const DriverProcess = () => {
       await firestore().collection('rides').doc(ride.id).update({
         status: 'accepted',
         driverId: user.uid,
+        driverName,
         acceptedAt: firestore.FieldValue.serverTimestamp(),
       });
 
@@ -122,6 +140,7 @@ const DriverProcess = () => {
       router.push({
         pathname: '/driding',
         params: {
+          rideId: ride.id,
           pickupLat: ride.pickupLat.toString(),
           pickupLng: ride.pickupLng.toString(),
           dropLat: ride.dropLat.toString(),
@@ -129,7 +148,8 @@ const DriverProcess = () => {
           rideType: ride.rideType,
           amount: ride.amount.toString(),
           durationMin: ride.durationMin.toString(),
-          fromDriver: 'true', // Optional flag if you want to differentiate
+          pin: ride.pin?.toString() ?? '',
+          driverName,
         },
       });
     } catch (error) {
@@ -142,12 +162,10 @@ const DriverProcess = () => {
       await firestore().collection('rides').doc(rideId).update({
         status: 'rejected',
       });
-      // Removed Alert
     } catch (error) {
       console.error('Reject Ride Error:', error);
     }
   };
-
 
   return (
     <View style={styles.container}>

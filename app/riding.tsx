@@ -1,14 +1,30 @@
 import polyline from '@mapbox/polyline';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import firestore from '@react-native-firebase/firestore';
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import React, { useEffect, useState } from 'react';
 import { Alert, BackHandler, Dimensions, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import MapView, { Marker, Polyline } from 'react-native-maps';
 
-const riding = () => {
-  const { pickupLat, pickupLng, dropLat, dropLng, driverName, pin, durationMin, paymentMethod, rideType, amount, eta } = useLocalSearchParams();
+const Riding = () => {
+  const {
+    pickupLat,
+    pickupLng,
+    dropLat,
+    dropLng,
+    driverName: passedDriverName,
+    pin,
+    durationMin,
+    paymentMethod,
+    rideType,
+    amount,
+    eta,
+    rideId, // ✅ New param
+  } = useLocalSearchParams();
+
   const router = useRouter();
   const [polylineCoords, setPolylineCoords] = useState([]);
+  const [driverName, setDriverName] = useState(passedDriverName || 'Loading...'); // ✅ Stateful driver name
 
   const pickup = {
     latitude: parseFloat(pickupLat as string),
@@ -18,12 +34,6 @@ const riding = () => {
   const drop = {
     latitude: parseFloat(dropLat as string),
     longitude: parseFloat(dropLng as string),
-  };
-
-  const generateMockDriverName = () => {
-  const names = ['Rajiv', 'Amit', 'Suresh', 'Kiran', 'Deepak', 'Neeraj', 'Manoj', 'Sunil'];
-  const randomIndex = Math.floor(Math.random() * names.length);
-  return names[randomIndex];
   };
 
   const fetchPolyline = async () => {
@@ -44,7 +54,6 @@ const riding = () => {
     }
   };
 
-
   useEffect(() => {
     const saveRideInfo = async () => {
       await AsyncStorage.setItem('currentRide', JSON.stringify({
@@ -58,13 +67,25 @@ const riding = () => {
     fetchPolyline();
 
     const backHandler = BackHandler.addEventListener('hardwareBackPress', () => {
-      BackHandler.exitApp(); 
+      BackHandler.exitApp();
       return true;
     });
 
     return () => {
       backHandler.remove();
     };
+  }, []);
+
+  // ✅ Fetch driverName if not passed via props
+  useEffect(() => {
+    const fetchDriver = async () => {
+      if (rideId) {
+        const doc = await firestore().collection('rides').doc(rideId as string).get();
+        const nameFromDoc = doc.data()?.driverName || 'Unavailable';
+        setDriverName(nameFromDoc);
+      }
+    };
+    fetchDriver();
   }, []);
 
   return (
@@ -83,7 +104,6 @@ const riding = () => {
         {polylineCoords.length > 0 && (
           <Polyline coordinates={polylineCoords} strokeColor="#007AFF" strokeWidth={4} />
         )}
-
       </MapView>
 
       <View style={styles.details}>
@@ -91,7 +111,7 @@ const riding = () => {
 
         <View style={styles.detailItem}>
           <Text style={styles.label}>Driver:</Text>
-          <Text style={styles.value}>👨‍✈️ {driverName || generateMockDriverName()}</Text>
+          <Text style={styles.value}>👨‍✈️ {driverName}</Text>
         </View>
 
         <View style={styles.detailItem}>
@@ -107,55 +127,58 @@ const riding = () => {
         </View>
 
         <View style={styles.buttonRow}>
-          <TouchableOpacity style={styles.cancelBtn} onPress={() => {
-            AsyncStorage.removeItem('currentRide');
-            router.replace('/drawer/home')}}>
+          <TouchableOpacity
+            style={styles.cancelBtn}
+            onPress={() => {
+              AsyncStorage.removeItem('currentRide');
+              router.replace('/drawer/home');
+            }}
+          >
             <Text style={styles.cancelText}>Cancel Ride</Text>
           </TouchableOpacity>
 
           <TouchableOpacity
             style={styles.doneBtn}
             onPress={() => {
-                AsyncStorage.removeItem('currentRide');
-                if (paymentMethod === 'Cash') {
-                    Alert.alert(
-                        'Pay in Cash',
-                        `Please pay ₹${amount} to the driver in cash.`,
-                        [
-                            {
-                                text: 'OK',
-                                onPress: () => router.replace('/drawer/home'),
-                            },
-                        ]
-                    );
-                } else {
-                    router.push({
-                        pathname: '/upipayment',
-                        params: {
-                            pickupLat,
-                            pickupLng,
-                            dropLat,
-                            dropLng,
-                            rideType,
-                            driverName,
-                            pin,
-                            eta,
-                            amount,
-                        },
-                    });
-                }
+              AsyncStorage.removeItem('currentRide');
+              if (paymentMethod === 'Cash') {
+                Alert.alert(
+                  'Pay in Cash',
+                  `Please pay ₹${amount} to the driver in cash.`,
+                  [
+                    {
+                      text: 'OK',
+                      onPress: () => router.replace('/drawer/home'),
+                    },
+                  ]
+                );
+              } else {
+                router.push({
+                  pathname: '/upipayment',
+                  params: {
+                    pickupLat,
+                    pickupLng,
+                    dropLat,
+                    dropLng,
+                    rideType,
+                    driverName,
+                    pin,
+                    eta,
+                    amount,
+                  },
+                });
+              }
             }}
           >
-  <Text style={styles.doneText}>Done</Text>
-</TouchableOpacity>
-
+            <Text style={styles.doneText}>Done</Text>
+          </TouchableOpacity>
         </View>
       </View>
     </View>
   );
 };
 
-export default riding;
+export default Riding;
 
 const { height } = Dimensions.get('window');
 
@@ -234,4 +257,3 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
   },
 });
-

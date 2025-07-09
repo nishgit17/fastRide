@@ -1,16 +1,17 @@
 import polyline from '@mapbox/polyline';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import firestore from '@react-native-firebase/firestore';
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import React, { useEffect, useState } from 'react';
 import {
-    BackHandler,
-    Dimensions,
-    InteractionManager,
-    StyleSheet,
-    Text,
-    TextInput,
-    TouchableOpacity,
-    View
+  BackHandler,
+  Dimensions,
+  InteractionManager,
+  StyleSheet,
+  Text,
+  TextInput,
+  TouchableOpacity,
+  View,
 } from 'react-native';
 import MapView, { Marker, Polyline } from 'react-native-maps';
 
@@ -20,18 +21,19 @@ const Riding = () => {
     pickupLng,
     dropLat,
     dropLng,
-    driverName,
     pin,
     durationMin,
     paymentMethod,
     rideType,
     amount,
     eta,
+    rideId, // ✅ Get rideId
   } = useLocalSearchParams();
 
   const router = useRouter();
   const [polylineCoords, setPolylineCoords] = useState([]);
   const [enteredPin, setEnteredPin] = useState('');
+  const [riderName, setRiderName] = useState('Loading...');
 
   const pickup = {
     latitude: parseFloat(pickupLat as string),
@@ -76,7 +78,7 @@ const Riding = () => {
           pickupLng,
           dropLat,
           dropLng,
-          driverName,
+          riderName,
           pin,
           durationMin,
           paymentMethod,
@@ -100,37 +102,52 @@ const Riding = () => {
     };
   }, []);
 
-    const handleCompleteRide = () => {
-    //const trimmedEnteredPin = enteredPin.trim();
-    //const expectedPin = (pin ?? '').toString().trim();
-
-    //console.log('Entered PIN:', trimmedEnteredPin);
-    //console.log('Expected PIN:', expectedPin);
-
-    //if (trimmedEnteredPin !== expectedPin) {
-        //Alert.alert('Incorrect PIN', 'Please enter the correct 4-digit PIN to complete the ride.');
-        //return;
-    //}
-
-    AsyncStorage.removeItem('currentRide');
-    
-    InteractionManager.runAfterInteractions(() => {
-        router.push({
-            pathname: '/generateqr',
-            params: {
-            pickupLat,
-            pickupLng,
-            dropLat,
-            dropLng,
-            rideType,
-            driverName,
-            pin,
-            eta,
-            amount,
-            },
-        });
-    })
+  // ✅ Fetch rider's name from Firestore using rideId
+  useEffect(() => {
+    const fetchRider = async () => {
+      if (rideId) {
+        try {
+          const doc = await firestore().collection('rides').doc(rideId as string).get();
+          setRiderName(doc.data()?.riderName || generateMockRiderName());
+        } catch (error) {
+          console.error('Failed to fetch rider name:', error);
+          setRiderName(generateMockRiderName());
+        }
+      }
     };
+    fetchRider();
+  }, [rideId]);
+
+  const handleCompleteRide = () => {
+    console.log('Entered PIN:', `"${enteredPin}"`);
+    console.log('Expected PIN:', `"${pin}"`);
+    
+    const cleanedEnteredPin = (enteredPin || '').trim();
+    const expectedPin = (pin || '').toString().trim();
+
+    if (cleanedEnteredPin.length !== 4 || cleanedEnteredPin !== expectedPin) {
+      alert('Incorrect PIN. Please ask the rider for the correct 4-digit PIN.');
+      return;
+    }
+    AsyncStorage.removeItem('currentRide');
+
+    InteractionManager.runAfterInteractions(() => {
+      router.push({
+        pathname: '/generateqr',
+        params: {
+          pickupLat,
+          pickupLng,
+          dropLat,
+          dropLng,
+          rideType,
+          driverName: riderName,
+          pin,
+          eta,
+          amount,
+        },
+      });
+    });
+  };
 
   return (
     <View style={styles.container}>
@@ -155,7 +172,7 @@ const Riding = () => {
 
         <View style={styles.detailItem}>
           <Text style={styles.label}>Rider:</Text>
-          <Text style={styles.value}>👤 {driverName || generateMockRiderName()}</Text>
+          <Text style={styles.value}>👤 {riderName}</Text>
         </View>
 
         <View style={styles.detailItem}>
