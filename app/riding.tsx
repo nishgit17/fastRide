@@ -66,13 +66,14 @@ const Riding = () => {
     saveRideInfo();
     fetchPolyline();
 
+    // ✅ Lock the hardware back button
     const backHandler = BackHandler.addEventListener('hardwareBackPress', () => {
-      BackHandler.exitApp();
+      // Disable the back button
       return true;
     });
 
     return () => {
-      backHandler.remove();
+      backHandler.remove(); // ✅ Always clean up listeners
     };
   }, []);
 

@@ -45,14 +45,14 @@ const SelectLocation = () => {
   const [pickupCoords, setPickupCoords] = useState<{ lat: number; lng: number } | null>(null);
   const [dropCoords, setDropCoords] = useState<{ lat: number; lng: number } | null>(null);
   useEffect(() => {
-  const backAction = () => {
-    BackHandler.exitApp();
-    return true;
-  };
+    const backAction = () => {
+      router.back(); // Navigates to the previous screen (like home)
+      return true;
+    };
 
-  const backHandler = BackHandler.addEventListener('hardwareBackPress', backAction);
-  return () => backHandler.remove();
-}, []);
+    const backHandler = BackHandler.addEventListener('hardwareBackPress', backAction);
+    return () => backHandler.remove();
+  }, []);
 
   const handlePickupBlur = async () => {
     const coords = await fetchCoordinatesFromAddress(pickupText);

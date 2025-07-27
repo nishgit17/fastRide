@@ -179,12 +179,12 @@ const styles = StyleSheet.create({
     marginBottom: 8,
   },
   input: {
-    backgroundColor: '#f1f1f1',
+    backgroundColor: 'black',
     padding: 14,
     borderRadius: 10,
     fontSize: 16,
     marginBottom: 24,
-    color: 'black'
+    color: 'white'
   },
   button: {
     backgroundColor: '#1E88E5',

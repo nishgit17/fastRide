@@ -92,13 +92,13 @@ const Riding = () => {
     saveRideInfo();
     fetchPolyline();
 
+    // ✅ Lock the back button (prevent navigation)
     const backHandler = BackHandler.addEventListener('hardwareBackPress', () => {
-      BackHandler.exitApp();
-      return true;
+      return true; // Prevent back navigation
     });
 
     return () => {
-      backHandler.remove();
+      backHandler.remove(); // Clean up
     };
   }, []);
 
