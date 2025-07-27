@@ -62,6 +62,7 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     textAlign: 'center',
     marginBottom: 8,
+    color: 'black',
     marginTop: 48, // mt-12 ≈ 48px
   },
   subText: {

@@ -288,6 +288,7 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     marginBottom: 8,
     textAlign: 'center',
+    color: 'black'
   },
   rideCard: {
     padding: 12,
@@ -297,6 +298,7 @@ const styles = StyleSheet.create({
   },
   rideText: {
     fontSize: 14,
+    color: 'black',
     marginBottom: 4,
   },
   buttonRow: {

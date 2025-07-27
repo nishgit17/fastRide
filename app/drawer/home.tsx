@@ -207,7 +207,7 @@ const Home = () => {
 };
 
 const styles = StyleSheet.create({
-  sectionTitle: { fontSize: 22, fontWeight: '700', marginBottom: 16 },
+  sectionTitle: { fontSize: 22, fontWeight: '700', marginBottom: 16, color:'black' },
   searchContainer: {
     flexDirection: 'row',
     alignItems: 'center',
@@ -251,7 +251,8 @@ const styles = StyleSheet.create({
   serviceText: {
     marginTop: 6,
     fontSize: 14,
-    fontWeight: '500'
+    fontWeight: '500',
+    color: 'black',
   },
   promoImage: {
     width: '100%',

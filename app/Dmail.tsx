@@ -189,6 +189,7 @@ const styles = StyleSheet.create({
     fontWeight: '700',
     marginBottom: 24,
     textAlign: 'center',
+    color:'black'
   },
   inputContainer: {
     width: '100%',

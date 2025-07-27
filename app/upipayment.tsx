@@ -184,6 +184,7 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     fontSize: 16,
     marginBottom: 24,
+    color: 'black'
   },
   button: {
     backgroundColor: '#1E88E5',
