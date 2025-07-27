@@ -301,10 +301,10 @@ const styles = StyleSheet.create({
   modalContainer: {
     width: '80%', backgroundColor: '#fff', borderRadius: 12, padding: 20, alignItems: 'center',
   },
-  modalTitle: { fontSize: 18, fontWeight: 'bold', marginBottom: 10 },
+  modalTitle: { fontSize: 18, fontWeight: 'bold', marginBottom: 10, color: 'black' },
   modalInput: {
     width: '100%', borderColor: '#ccc', borderWidth: 1, borderRadius: 8, padding: 10,
-    marginBottom: 20, fontSize: 16,
+    marginBottom: 20, fontSize: 16, color: 'black',
   },
   modalButtonRow: {
     flexDirection: 'row', justifyContent: 'space-between', width: '100%',
