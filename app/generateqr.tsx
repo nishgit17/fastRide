@@ -13,7 +13,7 @@ const UpiPayment = () => {
 
   const router = useRouter();
 
-  const upiId = 'rider@upi'; // Replace with dynamic or fetched value if needed
+  const upiId = 'rider@upi';
   const upiUrl = `upi://pay?pa=${upiId}&pn=${driverName}&am=${amount}&cu=INR`;
 
   const handleContinue = async () => {

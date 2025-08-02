@@ -1,4 +1,4 @@
-// app/index.tsx
+
 import auth, { FirebaseAuthTypes } from '@react-native-firebase/auth';
 import { Redirect } from 'expo-router';
 import { useEffect, useState } from 'react';

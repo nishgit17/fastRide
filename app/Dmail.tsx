@@ -24,7 +24,7 @@ GoogleSignin.configure({
 
 const Dmail = () => {
   const router = useRouter();
-  const role = 'driver'; // hardcoded driver role
+  const role = 'driver'; 
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [isSignUp, setIsSignUp] = useState(false);

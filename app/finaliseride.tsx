@@ -72,7 +72,8 @@ const screenHeight = Dimensions.get('window').height;
 
 const FinaliseRide = () => {
   const [polylineCoords, setPolylineCoords] = useState([]);
-  const { pickupLat, pickupLng, dropLat, dropLng } = useLocalSearchParams();
+  const { pickupLat, pickupLng, dropLat, dropLng, drivers } = useLocalSearchParams();
+  const nearbyDriverUIDs: string[] = drivers ? JSON.parse(drivers as string) : [];
   const router = useRouter();
   const mapRef = useRef<MapView>(null);
   const defaultCoords = { latitude: 22.5726, longitude: 88.3639 };
@@ -167,7 +168,7 @@ const FinaliseRide = () => {
     const backHandler = BackHandler.addEventListener('hardwareBackPress', () => {
       if (searching) {
         setSearching(false);
-        return true; // prevent default back
+        return true;
       }
       router.replace('/drawer/home');
       return true;
@@ -177,6 +178,18 @@ const FinaliseRide = () => {
     return () => backHandler.remove();
   }, [searching]);
 
+  useEffect(() => {
+    let timeout: ReturnType<typeof setTimeout>;
+
+    if (searching) {
+      timeout = setTimeout(() => {
+        setSearching(false);
+        alert('No drivers were found. Please try again later.');
+      }, 1800000); 
+    }
+
+    return () => clearTimeout(timeout); 
+  }, [searching]);
 
   const bookRideInFirestore = async () => {
     const currentUser = auth().currentUser;
@@ -199,6 +212,7 @@ const FinaliseRide = () => {
       durationMin: selectedRide.durationMin,
       status: 'pending',
       createdAt: firestore.FieldValue.serverTimestamp(),
+      visibleToDrivers: nearbyDriverUIDs,
       pin,
     };
 
@@ -298,7 +312,7 @@ const FinaliseRide = () => {
                 const unsubscribe = rideRef.onSnapshot((doc) => {
                   const data = doc.data();
                   if (data?.status === 'accepted') {
-                    unsubscribe(); // Stop listening
+                    unsubscribe(); 
                     setSearching(false);
                     router.push({
                       pathname: '/riding',
@@ -325,7 +339,6 @@ const FinaliseRide = () => {
         </View>
       </View>
 
-      {/* Searching Modal */}
       <Modal animationType="fade" transparent visible={searching}>
         <View style={styles.modalOverlay}>
           <View style={styles.modalBox}>

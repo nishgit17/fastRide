@@ -7,12 +7,14 @@ import {
   Alert,
   Dimensions,
   FlatList,
+  Image,
   StyleSheet,
   Text,
   TouchableOpacity,
-  View,
+  View
 } from 'react-native';
 import MapView, { Marker } from 'react-native-maps';
+import Image2 from '../assets/images/norequests.png';
 
 const screenHeight = Dimensions.get('window').height;
 
@@ -25,6 +27,7 @@ interface Ride {
   rideType: string;
   amount: number;
   durationMin: number;
+  pin?: string;
   [key: string]: any;
 }
 
@@ -40,6 +43,24 @@ const getAddressFromCoords = async (lat: number, lng: number): Promise<string> =
     console.error('Reverse geocode error:', err);
     return 'Address not available';
   }
+};
+
+const getDistanceFromLatLonInKm = (
+  lat1: number,
+  lon1: number,
+  lat2: number,
+  lon2: number
+): number => {
+  const toRad = (value: number) => (value * Math.PI) / 180;
+  const R = 6371;
+  const dLat = toRad(lat2 - lat1);
+  const dLon = toRad(lon2 - lon1);
+  const a =
+    Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+    Math.cos(toRad(lat1)) * Math.cos(toRad(lat2)) *
+    Math.sin(dLon / 2) * Math.sin(dLon / 2);
+  const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+  return R * c;
 };
 
 const DriverProcess = () => {
@@ -89,9 +110,11 @@ const DriverProcess = () => {
   }, []);
 
   useEffect(() => {
+    if (!user?.uid) return;
     const unsubscribe = firestore()
       .collection('rides')
       .where('status', '==', 'pending')
+      .where('visibleToDrivers', 'array-contains', user.uid)
       .onSnapshot(async (snapshot) => {
         const rides: Ride[] = snapshot.docs.map((doc) => {
           const data = doc.data();
@@ -110,19 +133,31 @@ const DriverProcess = () => {
           };
         });
 
-        setRideRequests(rides.filter((ride) => ride.id !== selectedRide?.id));
+        if (location) {
+          const filteredRides = rides.filter((ride) => {
+            const distance = getDistanceFromLatLonInKm(
+              location.latitude,
+              location.longitude,
+              ride.pickupLat,
+              ride.pickupLng
+            );
+            return distance <= 3 && ride.id !== selectedRide?.id;
+          });
 
-        const newAddresses: Record<string, { pickup: string; drop: string }> = {};
-        for (const ride of rides) {
-          const pickup = await getAddressFromCoords(ride.pickupLat, ride.pickupLng);
-          const drop = await getAddressFromCoords(ride.dropLat, ride.dropLng);
-          newAddresses[ride.id] = { pickup, drop };
+          setRideRequests(filteredRides);
+
+          const newAddresses: Record<string, { pickup: string; drop: string }> = {};
+          for (const ride of filteredRides) {
+            const pickup = await getAddressFromCoords(ride.pickupLat, ride.pickupLng);
+            const drop = await getAddressFromCoords(ride.dropLat, ride.dropLng);
+            newAddresses[ride.id] = { pickup, drop };
+          }
+          setAddresses(newAddresses);
         }
-        setAddresses(newAddresses);
       });
 
     return () => unsubscribe();
-  }, [selectedRide]);
+  }, [selectedRide, location]);
 
   const acceptRide = async (ride: Ride) => {
     if (!user) return;
@@ -209,25 +244,19 @@ const DriverProcess = () => {
 
       <TouchableOpacity
         onPress={() => router.push('/dprofile')}
-        style={{
-          position: 'absolute',
-          top: 50,
-          right: 20,
-          backgroundColor: '#fff',
-          padding: 10,
-          borderRadius: 8,
-          elevation: 5,
-          zIndex: 999,
-        }}
+        style={styles.profileButton}
       >
         <Text style={{ fontWeight: 'bold', color: '#000' }}>👤 Profile</Text>
       </TouchableOpacity>
 
-      <View style={styles.bottomSheet}>
+      <View style={styles.requestContainer}>
         <Text style={styles.heading}>Active Ride Requests</Text>
 
         {rideRequests.length === 0 ? (
-          <Text style={{ textAlign: 'center', marginTop: 10 }}>No pending rides</Text>
+          <View style={{ alignItems: 'center', marginTop: 20 }}>
+            <Text style={{ fontSize: 16, color: '#888' }}>No pending requests</Text>
+            <Image source={Image2} style={styles.image} resizeMode="contain" />
+          </View>
         ) : (
           <FlatList
             data={rideRequests}
@@ -272,11 +301,26 @@ const DriverProcess = () => {
 export default DriverProcess;
 
 const styles = StyleSheet.create({
+  image: {
+    width: 200,
+    height: 200,
+    marginTop: 20,
+  },
   container: { flex: 1 },
   map: { height: screenHeight * 0.5 },
-  bottomSheet: {
-    flex: 1,
+  profileButton: {
+    position: 'absolute',
+    top: 50,
+    right: 20,
     backgroundColor: '#fff',
+    padding: 10,
+    borderRadius: 8,
+    elevation: 5,
+    zIndex: 999,
+  },
+  requestContainer: {
+    flex: 1,
+    backgroundColor: '#F5F5F5',
     paddingHorizontal: 16,
     paddingTop: 12,
     borderTopLeftRadius: 16,
@@ -288,7 +332,7 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     marginBottom: 8,
     textAlign: 'center',
-    color: 'black'
+    color: 'black',
   },
   rideCard: {
     padding: 12,

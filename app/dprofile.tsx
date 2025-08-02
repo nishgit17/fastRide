@@ -18,32 +18,53 @@ import {
 } from 'react-native';
 
 export default function ProfileScreen() {
-  const [rechargeModalVisible, setRechargeModalVisible] = useState(false);
-  const [rechargeAmount, setRechargeAmount] = useState('');
-
+  const [withdrawModalVisible, setWithdrawModalVisible] = useState(false);
+  const [withdrawAmount, setWithdrawAmount] = useState('');
   const router = useRouter();
   const [fullName, setFullName] = useState('');
   const [email, setEmail] = useState('');
   const [gender, setGender] = useState('');
   const [dob, setDob] = useState('');
+  const [vehicleType, setVehicleType] = useState('');
   const [wallet, setWallet] = useState(0);
 
   useEffect(() => {
     const fetchUserData = async () => {
-      const user = auth().currentUser;
+      const user = auth().currentUser;      <Modal transparent visible={withdrawModalVisible} animationType="fade">
+        <View style={styles.modalOverlay}>
+          <View style={styles.modalContainer}>
+            <Text style={styles.modalTitle}>Withdraw from Wallet</Text>
+            <TextInput
+              style={styles.modalInput}
+              placeholder="Enter amount"
+              keyboardType="numeric"
+              value={withdrawAmount}
+              onChangeText={setWithdrawAmount}
+            />
+            <View style={styles.modalButtonRow}>
+              <TouchableOpacity style={styles.modalCancel} onPress={() => setWithdrawModalVisible(false)}>
+                <Text style={styles.modalCancelText}>Cancel</Text>
+              </TouchableOpacity>
+              <TouchableOpacity style={styles.modalConfirm} onPress={confirmWithdraw}>
+                <Text style={styles.modalConfirmText}>Withdraw</Text>
+              </TouchableOpacity>
+            </View>
+          </View>
+        </View>
+      </Modal>
       if (!user) return;
 
       const docRef = firestore().collection('users').doc(user.uid);
       const doc = await docRef.get();
 
       if (!doc.exists) {
-        // New user – create default empty document
         await docRef.set({
           name: '',
           email: '',
           gender: '',
           dob: '',
           wallet: 0,
+          vehicleType: '',
         });
         setFullName('');
         setEmail('');
@@ -58,6 +79,7 @@ export default function ProfileScreen() {
           setGender(data.gender || '');
           setDob(data.dob || '');
           setWallet(typeof data.wallet === 'number' ? data.wallet : 0);
+          setVehicleType(data.vehicleType || '');
         }
       }
     };
@@ -86,6 +108,7 @@ export default function ProfileScreen() {
           email,
           gender,
           dob,
+          vehicleType,
         },
         { merge: true }
       );
@@ -96,15 +119,20 @@ export default function ProfileScreen() {
     }
   };
 
-  const handleRecharge = () => {
-    setRechargeAmount('');
-    setRechargeModalVisible(true);
+  const handleWithdraw = () => {
+    setWithdrawAmount('');
+    setWithdrawModalVisible(true);
   };
 
-  const confirmRecharge = async () => {
-    const amount = parseFloat(rechargeAmount);
+  const confirmWithdraw = async () => {
+    const amount = parseFloat(withdrawAmount);
     if (isNaN(amount) || amount <= 0) {
-      Alert.alert('Invalid Amount', 'Please enter a valid recharge amount.');
+      Alert.alert('Invalid Amount', 'Please enter a valid amount to withdraw.');
+      return;
+    }
+
+    if (amount > wallet) {
+      Alert.alert('Insufficient Balance', 'You do not have enough funds to withdraw this amount.');
       return;
     }
 
@@ -113,14 +141,14 @@ export default function ProfileScreen() {
 
     try {
       await firestore().collection('users').doc(user.uid).update({
-        wallet: firestore.FieldValue.increment(amount),
+        wallet: firestore.FieldValue.increment(-amount),
       });
-      setWallet((prev) => prev + amount);
-      setRechargeModalVisible(false);
-      Alert.alert('Recharge Successful', `₹${amount.toFixed(2)} added to your wallet.`);
+      setWallet((prev) => prev - amount);
+      setWithdrawModalVisible(false);
+      Alert.alert('Withdrawal Successful', `₹${amount.toFixed(2)} withdrawn from your wallet.`);
     } catch (error) {
-      console.error('Recharge error:', error);
-      Alert.alert('Error', 'Could not recharge wallet.');
+      console.error('Withdraw error:', error);
+      Alert.alert('Error', 'Could not withdraw from wallet.');
     }
   };
 
@@ -212,11 +240,27 @@ export default function ProfileScreen() {
         </View>
 
         <View style={styles.inputGroup}>
+          <Text style={styles.label}>Type of Vehicle</Text>
+          <View style={styles.pickerWrapper}>
+            <Picker
+              selectedValue={vehicleType}
+              onValueChange={(itemValue) => setVehicleType(itemValue)}
+              style={styles.picker}
+            >
+              <Picker.Item label="Select vehicle type" value="" />
+              <Picker.Item label="Bike" value="Bike" />
+              <Picker.Item label="Cab AC" value="Cab AC" />
+              <Picker.Item label="Cab Non AC" value="Cab Non AC" />
+            </Picker>
+          </View>
+        </View>
+
+        <View style={styles.inputGroup}>
           <Text style={styles.label}>Wallet Balance</Text>
           <View style={styles.walletRow}>
             <Text style={styles.walletAmount}>₹{wallet.toFixed(2)}</Text>
-            <TouchableOpacity style={styles.rechargeButton} onPress={handleRecharge}>
-              <Text style={styles.rechargeText}>Recharge</Text>
+            <TouchableOpacity style={styles.rechargeButton} onPress={handleWithdraw}>
+              <Text style={styles.rechargeText}>Withdraw</Text>
             </TouchableOpacity>
           </View>
         </View>
@@ -234,24 +278,23 @@ export default function ProfileScreen() {
         </TouchableOpacity>
       </ScrollView>
 
-      {/* Recharge Modal */}
-      <Modal transparent visible={rechargeModalVisible} animationType="fade">
+      <Modal transparent visible={withdrawModalVisible} animationType="fade">
         <View style={styles.modalOverlay}>
           <View style={styles.modalContainer}>
-            <Text style={styles.modalTitle}>Recharge Wallet</Text>
+            <Text style={styles.modalTitle}>Withdraw from Wallet</Text>
             <TextInput
               style={styles.modalInput}
               placeholder="Enter amount"
               keyboardType="numeric"
-              value={rechargeAmount}
-              onChangeText={setRechargeAmount}
+              value={withdrawAmount}
+              onChangeText={setWithdrawAmount}
             />
             <View style={styles.modalButtonRow}>
-              <TouchableOpacity style={styles.modalCancel} onPress={() => setRechargeModalVisible(false)}>
+              <TouchableOpacity style={styles.modalCancel} onPress={() => setWithdrawModalVisible(false)}>
                 <Text style={styles.modalCancelText}>Cancel</Text>
               </TouchableOpacity>
-              <TouchableOpacity style={styles.modalConfirm} onPress={confirmRecharge}>
-                <Text style={styles.modalConfirmText}>Add</Text>
+              <TouchableOpacity style={styles.modalConfirm} onPress={confirmWithdraw}>
+                <Text style={styles.modalConfirmText}>Withdraw</Text>
               </TouchableOpacity>
             </View>
           </View>

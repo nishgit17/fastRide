@@ -62,7 +62,7 @@ const styles = StyleSheet.create({
   },
   footer: {
     alignItems: 'center',
-    paddingBottom: 80,  // Reduced padding to lift text upward
+    paddingBottom: 80,  
   },
   footerText: {
     fontSize: 16,

@@ -19,12 +19,12 @@ const Riding = () => {
     rideType,
     amount,
     eta,
-    rideId, // ✅ New param
+    rideId, 
   } = useLocalSearchParams();
 
   const router = useRouter();
   const [polylineCoords, setPolylineCoords] = useState([]);
-  const [driverName, setDriverName] = useState(passedDriverName || 'Loading...'); // ✅ Stateful driver name
+  const [driverName, setDriverName] = useState(passedDriverName || 'Loading...'); 
 
   const pickup = {
     latitude: parseFloat(pickupLat as string),
@@ -66,18 +66,16 @@ const Riding = () => {
     saveRideInfo();
     fetchPolyline();
 
-    // ✅ Lock the hardware back button
     const backHandler = BackHandler.addEventListener('hardwareBackPress', () => {
-      // Disable the back button
+
       return true;
     });
 
     return () => {
-      backHandler.remove(); // ✅ Always clean up listeners
+      backHandler.remove();
     };
   }, []);
 
-  // ✅ Fetch driverName if not passed via props
   useEffect(() => {
     const fetchDriver = async () => {
       if (rideId) {

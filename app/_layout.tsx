@@ -22,7 +22,6 @@ export default function RootLayout() {
   useEffect(() => {
     if (!isAuthChecked) return;
     
-    // Use push instead of replace to maintain navigation history
     if (isLoggedIn) {
       router.push('/drawer/home');
     } else {
@@ -40,12 +39,10 @@ export default function RootLayout() {
 
   return (
     <Stack>
-      {/* Common screens */}
       <Stack.Screen name="index" options={{ headerShown: false }} />
       <Stack.Screen name="nextindex" options={{ headerShown: false }} />
       <Stack.Screen name="choice" options={{ headerShown: false }} />
       
-      {/* Authentication screens */}
       <Stack.Screen name="login" options={{ headerShown: false }} />
       <Stack.Screen name="Dmail" options={{ headerShown: false }} />
       <Stack.Screen name="Dindex" options={{ headerShown: false }} />
@@ -65,7 +62,6 @@ export default function RootLayout() {
         }}
       />
       
-      {/* Main app screens */}
       <Stack.Screen name="drawer" options={{ headerShown: false }} />
       <Stack.Screen name="homemenu" options={{ headerShown: false }} />
       <Stack.Screen name="finaliseride" options={{ headerShown: false }} />
@@ -76,7 +72,6 @@ export default function RootLayout() {
       <Stack.Screen name="dprofile" options={{ headerShown: false }} />
       <Stack.Screen name="generateqr" options={{ headerShown: false }} />
       
-      {/* Location/ride screens */}
       <Stack.Screen
         name="selectlocation"
         options={{
@@ -113,7 +108,6 @@ export default function RootLayout() {
         }}
       />
       
-      {/* Parcel screens */}
       <Stack.Screen
         name="parcel"
         options={{

@@ -127,7 +127,6 @@ const UpiPaymentScreen = () => {
         </TouchableOpacity>
       </View>
 
-      {/* QR Scanner Modal */}
       <Modal visible={scannerVisible} animationType="slide">
         <View style={styles.scannerContainer}>
           {permission?.granted ? (

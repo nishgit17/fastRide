@@ -25,7 +25,7 @@ GoogleSignin.configure({
 
 const LoginScreen = () => {
   const router = useRouter();
-  const role = 'rider'; // hardcoded role
+  const role = 'rider';
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [isSignUp, setIsSignUp] = useState(false);

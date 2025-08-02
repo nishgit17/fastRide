@@ -44,7 +44,13 @@ const Home = () => {
           setMarkerCoord(initCoord);
           const initRegion = { ...initCoord, ...DEFAULT_DELTA };
           setRegion(initRegion);
-          setSelectedAddress('Current Location');
+
+          const res = await Location.reverseGeocodeAsync(initCoord);
+          const addr: Partial<Location.LocationGeocodedAddress> =
+            res && res.length > 0 ? res[0] : {};
+          const parts = [addr.name, addr.street, addr.city].filter(Boolean);
+          setSelectedAddress(parts.join(', ') || 'Current Location');
+
           mapRef.current?.animateToRegion(initRegion, 300);
         }
       } catch (error) {
@@ -124,7 +130,7 @@ const Home = () => {
     router.push({
       pathname: '/selectlocation',
       params: {
-        address: encoded,
+        pickup: encoded,
         ...(markerCoord && {
           lat: markerCoord.latitude.toString(),
           lng: markerCoord.longitude.toString()

@@ -66,12 +66,17 @@ export default function ProfileScreen() {
   }, []);
 
   const handleLogout = async () => {
-    try {
-      await auth().signOut();
-      router.replace('/login');
-    } catch (error) {
-      console.error('Logout failed:', error);
-      Alert.alert('Error', 'Could not log out. Please try again.');
+    const currentUser = auth().currentUser;
+
+    if (currentUser) {
+      try {
+        await auth().signOut();
+        console.log('Logout successful');
+      } catch (error) {
+        console.error('Logout failed:', error);
+      }
+    } else {
+      console.warn('No user is currently signed in.');
     }
   };
 
@@ -234,7 +239,6 @@ export default function ProfileScreen() {
         </TouchableOpacity>
       </ScrollView>
 
-      {/* Recharge Modal */}
       <Modal transparent visible={rechargeModalVisible} animationType="fade">
         <View style={styles.modalOverlay}>
           <View style={styles.modalContainer}>

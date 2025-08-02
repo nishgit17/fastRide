@@ -1,4 +1,4 @@
-import { useRouter } from 'expo-router'; // Import useRouter for programmatic navigation
+import { useRouter } from 'expo-router';
 import React from 'react';
 import {
   StatusBar,

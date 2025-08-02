@@ -5,11 +5,11 @@ import { useLocalSearchParams, useRouter } from 'expo-router';
 import type { JSX } from 'react';
 import React, { useEffect, useRef, useState } from 'react';
 import {
-    BackHandler,
-    StyleSheet,
-    Text,
-    TouchableOpacity,
-    View
+  BackHandler,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View
 } from 'react-native';
 import MapView, { Marker, Polyline } from 'react-native-maps';
 
@@ -223,9 +223,9 @@ bottomSheetCustom: {
   bottom: 0,
   left: 0,
   right: 0,
-  backgroundColor: '#fff', // Light mode fix
+  backgroundColor: '#fff', 
   padding: 16,
-  paddingBottom: 60, // Add extra space at bottom
+  paddingBottom: 60,
   borderTopLeftRadius: 16,
   borderTopRightRadius: 16,
   elevation: 8,

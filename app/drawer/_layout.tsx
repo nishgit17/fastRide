@@ -4,7 +4,7 @@ export default function DrawerLayout() {
   return (
     <Drawer
       screenOptions={{
-        headerShown: false, // ✅ Hide header for all screens
+        headerShown: false, 
       }}
     >
       <Drawer.Screen

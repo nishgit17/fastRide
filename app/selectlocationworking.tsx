@@ -1,18 +1,18 @@
 import { useRouter } from 'expo-router';
 import React, { useRef, useState } from 'react';
 import {
-    Keyboard,
-    KeyboardAvoidingView,
-    Platform,
-    StyleSheet,
-    Text,
-    TouchableOpacity,
-    TouchableWithoutFeedback,
-    View,
+  Keyboard,
+  KeyboardAvoidingView,
+  Platform,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  TouchableWithoutFeedback,
+  View,
 } from 'react-native';
 import { GooglePlacesAutocomplete } from 'react-native-google-places-autocomplete';
 
-const GOOGLE_API_KEY = 'AIzaSyA-ivHxJO-Kjma_sDi9zvpjxd9nB4jZTXE'; // Replace this
+const GOOGLE_API_KEY = 'AIzaSyA-ivHxJO-Kjma_sDi9zvpjxd9nB4jZTXE'; 
 
 const SelectLocationWorking = () => {
   const router = useRouter();
@@ -44,7 +44,6 @@ const SelectLocationWorking = () => {
     >
       <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
         <View style={styles.container}>
-          {/* Pickup Location */}
           <View style={[styles.inputBlock, { zIndex: 2 }]}>
             <Text style={styles.label}>Pickup Location</Text>
             <GooglePlacesAutocomplete
@@ -72,8 +71,6 @@ const SelectLocationWorking = () => {
               }}
             />
           </View>
-
-          {/* Drop Location */}
           <View style={[styles.inputBlock, { zIndex: 1 }]}>
             <Text style={styles.label}>Drop Location</Text>
             <GooglePlacesAutocomplete
@@ -102,7 +99,6 @@ const SelectLocationWorking = () => {
             />
           </View>
 
-          {/* Confirm Button */}
           <TouchableOpacity
             style={[
               styles.confirmButton,

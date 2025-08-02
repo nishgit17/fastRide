@@ -1,4 +1,6 @@
-import { useRouter } from 'expo-router';
+import firestore from '@react-native-firebase/firestore';
+import { useLocalSearchParams, useRouter } from 'expo-router';
+import haversine from 'haversine-distance';
 import React, { useEffect, useState } from 'react';
 import {
   BackHandler,
@@ -38,15 +40,24 @@ const fetchCoordinatesFromAddress = async (address: string) => {
 
 const SelectLocation = () => {
   const router = useRouter();
-
-  const [pickupText, setPickupText] = useState('');
+  const params = useLocalSearchParams();
+  const [pickupText, setPickupText] = useState(() =>
+    params?.pickup ? decodeURIComponent(params.pickup as string) : ''
+  );
   const [dropText, setDropText] = useState('');
 
   const [pickupCoords, setPickupCoords] = useState<{ lat: number; lng: number } | null>(null);
   const [dropCoords, setDropCoords] = useState<{ lat: number; lng: number } | null>(null);
+  
+  useEffect(() => {
+  if (pickupText && !pickupCoords) {
+    handlePickupBlur();
+  }
+  }, [pickupText]);
+
   useEffect(() => {
     const backAction = () => {
-      router.back(); // Navigates to the previous screen (like home)
+      router.back(); 
       return true;
     };
 
@@ -64,18 +75,48 @@ const SelectLocation = () => {
     setDropCoords(coords);
   };
 
-  const handleConfirm = () => {
+  const handleConfirm = async () => {
     if (!pickupCoords || !dropCoords) return;
 
-    router.push({
-      pathname: '/finaliseride',
-      params: {
-        pickupLat: pickupCoords.lat.toString(),
-        pickupLng: pickupCoords.lng.toString(),
-        dropLat: dropCoords.lat.toString(),
-        dropLng: dropCoords.lng.toString(),
-      },
-    });
+    try {
+
+      const snapshot = await firestore().collection('users').where('role', '==', 'driver').get();
+
+      const nearbyDrivers: string[] = [];
+
+      snapshot.forEach((doc) => {
+        const driverData = doc.data();
+        if (driverData.location?.lat && driverData.location?.lng) {
+          const distanceInMeters = haversine(
+            { lat: pickupCoords.lat, lng: pickupCoords.lng },
+            { lat: driverData.location.lat, lng: driverData.location.lng }
+          );
+
+          if (distanceInMeters <= 3000) {
+            nearbyDrivers.push(doc.id);
+          }
+        }
+      });
+
+      if (nearbyDrivers.length === 0) {
+        alert('No nearby drivers found within 3 km.');
+        return;
+      }
+
+      router.push({
+        pathname: '/finaliseride',
+        params: {
+          pickupLat: pickupCoords.lat.toString(),
+          pickupLng: pickupCoords.lng.toString(),
+          dropLat: dropCoords.lat.toString(),
+          dropLng: dropCoords.lng.toString(),
+          drivers: JSON.stringify(nearbyDrivers), 
+        },
+      });
+    } catch (error) {
+      console.error('Error fetching drivers:', error);
+      alert('Failed to fetch nearby drivers.');
+    }
   };
 
   return (
@@ -86,7 +127,6 @@ const SelectLocation = () => {
     >
       <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
         <View style={styles.container}>
-          {/* Pickup Input */}
           <View style={styles.inputWrapper}>
             <Text style={[styles.label, { color: 'green' }]}>Pickup Location</Text>
             <TextInput
@@ -99,7 +139,6 @@ const SelectLocation = () => {
             />
           </View>
 
-          {/* Drop Input */}
           <View style={styles.inputWrapper}>
             <Text style={[styles.label, { color: 'red' }]}>Drop Location</Text>
             <TextInput
@@ -111,8 +150,6 @@ const SelectLocation = () => {
               placeholderTextColor="#888"
             />
           </View>
-
-          {/* Confirm Button */}
           <TouchableOpacity
             style={[
               styles.confirmButton,

@@ -80,7 +80,7 @@ const styles = StyleSheet.create({
     borderRadius: 8,
     paddingHorizontal: 16,
     marginTop: 16,
-    marginBottom: 260, // Similar spacing as mb-64
+    marginBottom: 260, 
   },
   button: {
     height: 48,
@@ -89,7 +89,7 @@ const styles = StyleSheet.create({
     marginHorizontal: 20,
     justifyContent: 'center',
     alignItems: 'center',
-    marginTop: 280, // Adjusted instead of mt-80
+    marginTop: 280, 
   },
   buttonText: {
     fontSize: 16,

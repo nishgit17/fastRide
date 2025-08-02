@@ -27,7 +27,6 @@ export default function ParcelScreen() {
   return (
     <ScrollView style={{ flex: 1, backgroundColor: '#fff' }} contentContainerStyle={{ paddingVertical: 20 }}>
       
-      {/* Horizontal Info Cards at Top */}
       <ScrollView
         horizontal
         showsHorizontalScrollIndicator={false}
@@ -43,7 +42,6 @@ export default function ParcelScreen() {
         ))}
       </ScrollView>
 
-      {/* Main Content Below */}
       <View style={styles.mainContent}>
         <Text style={styles.mainTitle}>What do you wish to do today?</Text>
         <Text style={styles.mainSubtitle}>

@@ -58,16 +58,16 @@ const styles = StyleSheet.create({
     paddingTop: 24,
   },
   title: {
-    fontSize: 32, // equivalent to text-4xl
+    fontSize: 32, 
     fontWeight: 'bold',
     textAlign: 'center',
     marginBottom: 8,
     color: 'black',
-    marginTop: 48, // mt-12 ≈ 48px
+    marginTop: 48, 
   },
   subText: {
-    fontSize: 16, // approx text-base
-    color: '#6b7280', // approximate gray color
+    fontSize: 16, 
+    color: '#6b7280', 
     marginTop: 20,
     marginBottom: 156,
   },

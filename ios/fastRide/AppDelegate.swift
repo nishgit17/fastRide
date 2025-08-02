@@ -38,9 +38,9 @@ FirebaseApp.configure()
       launchOptions: launchOptions)
 #endif
 
-// @generated begin react-native-maps-init - expo prebuild (DO NOT MODIFY) sync-9ec28a5de649f06bc0339736842d79caaeea5800
+// @generated begin react-native-maps-init - expo prebuild (DO NOT MODIFY) sync-5e8b0e4c52a75214e760a6312dffd487e101fbe5
 #if canImport(GoogleMaps)
-GMSServices.provideAPIKey("AIzaSyCLVlmceJF7PXpWwsmc9OUKDLTNlAGVXms")
+GMSServices.provideAPIKey("AIzaSyBYG6dio82CRVSjQ-JF1B3o5yARKa2xDLQ")
 #endif
 // @generated end react-native-maps-init
     return super.application(application, didFinishLaunchingWithOptions: launchOptions)
@@ -52,6 +52,12 @@ GMSServices.provideAPIKey("AIzaSyCLVlmceJF7PXpWwsmc9OUKDLTNlAGVXms")
     open url: URL,
     options: [UIApplication.OpenURLOptionsKey: Any] = [:]
   ) -> Bool {
+// @generated begin @react-native-firebase/auth-openURL - expo prebuild (DO NOT MODIFY)
+    if url.host?.lowercased() == "firebaseauth" {
+      // invocations for Firebase Auth are handled elsewhere and should not be forwarded to Expo Router
+      return false
+    }
+// @generated end @react-native-firebase/auth-openURL
 // @generated begin @react-native-firebase/auth-openURL - expo prebuild (DO NOT MODIFY)
     if url.host?.lowercased() == "firebaseauth" {
       // invocations for Firebase Auth are handled elsewhere and should not be forwarded to Expo Router

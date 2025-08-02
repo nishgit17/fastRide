@@ -27,7 +27,7 @@ const Riding = () => {
     rideType,
     amount,
     eta,
-    rideId, // ✅ Get rideId
+    rideId,
   } = useLocalSearchParams();
 
   const router = useRouter();
@@ -92,17 +92,15 @@ const Riding = () => {
     saveRideInfo();
     fetchPolyline();
 
-    // ✅ Lock the back button (prevent navigation)
     const backHandler = BackHandler.addEventListener('hardwareBackPress', () => {
-      return true; // Prevent back navigation
+      return true; 
     });
 
     return () => {
-      backHandler.remove(); // Clean up
+      backHandler.remove(); 
     };
   }, []);
 
-  // ✅ Fetch rider's name from Firestore using rideId
   useEffect(() => {
     const fetchRider = async () => {
       if (rideId) {
